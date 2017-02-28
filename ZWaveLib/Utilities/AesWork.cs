@@ -3,29 +3,27 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 
-namespace ZWaveLib.Devices
+namespace ZWaveLib.Utilities
 {
     public class AesWork
     {
-        private static byte[] zeroIV = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        private static readonly byte[] zeroIV = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
         public static byte[] GenerateKey1(byte[] nc, byte[] plainText)
         {
-            byte[] tmp = new byte[zeroIV.Length];
+            var tmp = new byte[zeroIV.Length];
             Array.Copy(EncryptMessage(nc, zeroIV, plainText, CipherMode.CBC), tmp, 16);
             return tmp;
         }
 
-        public static  byte[] EncryptOfbMessage(byte[] nc, byte[] iv, byte[] plaintext)
+        public static byte[] EncryptOfbMessage(byte[] nc, byte[] iv, byte[] plaintext)
         {
-            byte[] processed = new byte[plaintext.Length];
-            int len = (plaintext.Length % 16) * 16;
-            byte[] l_plaintext = new byte[len];
-            byte[] encrypted = EncryptMessage(nc, iv, l_plaintext, CipherMode.CBC);
-            for (int i = 0; i < plaintext.Length; i++)
+            var processed = new byte[plaintext.Length];
+            var len = (plaintext.Length % 16) * 16;
+            var l_plaintext = new byte[len];
+            var encrypted = EncryptMessage(nc, iv, l_plaintext, CipherMode.CBC);
+            for (var i = 0; i < plaintext.Length; i++)
             {
                 processed[i] = (byte)(plaintext[i] ^ encrypted[i]);
             }
@@ -34,7 +32,7 @@ namespace ZWaveLib.Devices
 
         public static byte[] EncryptEcbMessage(byte[] nc, byte[] plaintext)
         {
-            byte[] tmp = new byte[zeroIV.Length];
+            var tmp = new byte[zeroIV.Length];
             Array.Copy(EncryptMessage(nc, zeroIV, plaintext, CipherMode.ECB), tmp, 16);
             return tmp;
         }
@@ -46,25 +44,29 @@ namespace ZWaveLib.Devices
                 Utility.DebugLog(DebugMessageType.Error, "The used key has not been generated.");
                 return zeroIV;
             }
-            RijndaelManaged rijndael = new RijndaelManaged();
-            rijndael.Key = nc;
-            rijndael.IV = iv;
-            rijndael.Mode = cm;
-            return EncryptBytes(rijndael, plaintext);
+
+            var algorithm = new AesManaged
+            {
+                Key = nc,
+                IV = iv,
+                Mode = cm
+            };
+            return EncryptBytes(algorithm, plaintext);
         }
 
-        private static byte[] EncryptBytes(SymmetricAlgorithm alg, byte[] message)
+        private static byte[] EncryptBytes(SymmetricAlgorithm algorithm, byte[] message)
         {
             if ((message == null) || (message.Length == 0))
             {
                 return message;
             }
-            if (alg == null)
+            if (algorithm == null)
             {
-                throw new ArgumentNullException("alg");
+                throw new ArgumentNullException(nameof(algorithm));
             }
+
             using (var stream = new MemoryStream())
-            using (var encryptor = alg.CreateEncryptor())
+            using (var encryptor = algorithm.CreateEncryptor())
             using (var encrypt = new CryptoStream(stream, encryptor, CryptoStreamMode.Write))
             {
                 encrypt.Write(message, 0, message.Length);

@@ -21,6 +21,7 @@
 */
 
 using System;
+using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses

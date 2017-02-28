@@ -29,6 +29,7 @@ using System.Threading;
 
 using ZWaveLib.CommandClasses;
 using System.Xml.Serialization;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib
 {

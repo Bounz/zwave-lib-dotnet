@@ -22,10 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-
 using NLog;
 
-namespace ZWaveLib
+namespace ZWaveLib.Utilities
 {
 
     public enum DebugMessageType

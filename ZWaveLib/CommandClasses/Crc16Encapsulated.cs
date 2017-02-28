@@ -22,6 +22,7 @@
 
 using System;
 using System.Linq;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses
 {

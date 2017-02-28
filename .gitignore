@@ -15,3 +15,7 @@ Thumbs.db
 packages/*
 !packages/repositories.config
 
+
+\.idea/\.idea\.ZWaveLib/\.idea/
+
+\.idea/\.idea\.ZWaveLib/

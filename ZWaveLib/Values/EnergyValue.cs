@@ -21,6 +21,7 @@
  */
 
 using System;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.Values
 {

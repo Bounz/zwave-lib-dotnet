@@ -21,6 +21,7 @@
 *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
 */
 using System;
+using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses

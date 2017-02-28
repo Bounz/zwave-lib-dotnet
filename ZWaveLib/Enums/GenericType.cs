@@ -22,6 +22,14 @@
 
 namespace ZWaveLib
 {
+    public enum BasicType : byte
+    {
+        None = 0x00,
+        Controller = 0x01,        // Node is a portable controller
+        StaticController = 0x02,  // Node is a static controller
+        Slave = 0x03,             // Node is a slave
+        RoutingSlave = 0x04,      // Node is a routing slave
+    }
     
     public enum GenericType : byte
     {

@@ -33,6 +33,7 @@ using SerialPortLib;
 
 using ZWaveLib.Values;
 using ZWaveLib.CommandClasses;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib
 {
