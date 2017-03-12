@@ -29,166 +29,11 @@ using System.Threading;
 
 using ZWaveLib.CommandClasses;
 using System.Xml.Serialization;
+using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 
 namespace ZWaveLib
 {
-
-    /// <summary>
-    /// Node capabilities (Protocol Info).
-    /// </summary>
-    [Serializable]
-    public class NodeCapabilities
-    {
-        /// <summary>
-        /// Gets or sets the basic type.
-        /// </summary>
-        /// <value>The basic type.</value>
-        public byte BasicType { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets or sets the generic type.
-        /// </summary>
-        /// <value>The generic type.</value>
-        public byte GenericType { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets or sets the specific type.
-        /// </summary>
-        /// <value>The specific type.</value>
-        public byte SpecificType { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZWaveLib.NodeCapabilities"/> class.
-        /// </summary>
-        public NodeCapabilities()
-        {
-        }
-    }
-
-    /// <summary>
-    /// Node software version.
-    /// </summary>
-    [Serializable]
-    public class NodeVersion
-    {
-        /// <summary>
-        /// Gets or sets the Z-Wave Library Type.
-        /// </summary>
-        /// <value>Z-Wave Library Type.</value>
-        public byte LibraryType { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets or sets the Z-Wave Protocol Version.
-        /// </summary>
-        /// <value>Z-Wave Protocol Version.</value>
-        public byte ProtocolVersion { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets or sets the Z-Wave Protocol Sub Version.
-        /// </summary>
-        /// <value>Z-Wave Protocol Sub Version.</value>
-        public byte ProtocolSubVersion { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets or sets the Application Version.
-        /// </summary>
-        /// <value>Application Version.</value>
-        public byte ApplicationVersion { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets or sets the Application Sub Version.
-        /// </summary>
-        /// <value>Application Sub Version.</value>
-        public byte ApplicationSubVersion { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZWaveLib.NodeVersion"/> class.
-        /// </summary>
-        public NodeVersion()
-        {
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{{\"LibraryType\":{0}, \"ProtocolVersion\":{1}, \"ProtocolSubVersion\":{2}, \"ApplicationVersion\":{3}, \"ApplicationSubVersion\":{4}}}", 
-                LibraryType, ProtocolVersion, ProtocolSubVersion, ApplicationVersion, ApplicationSubVersion);
-        }
-    }
-
-    /// <summary>
-    /// Node command class.
-    /// </summary>
-    [Serializable]
-    public class NodeCommandClass
-    {
-        /// <summary>
-        /// The CC identifier.
-        /// </summary>
-        public /* readonly */ byte Id;
-
-        /// <summary>
-        /// Gets or sets the version for this CC.
-        /// </summary>
-        /// <value>The version.</value>
-        public int Version { get; /*internal*/ set; }
-
-        /// <summary>
-        /// Gets the command class enumeration entry.
-        /// </summary>
-        /// <value>The command class.</value>
-        [XmlIgnore]
-        public CommandClass CommandClass { get { return (CommandClass)Id; } }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZWaveLib.NodeCommandClass"/> class.
-        /// </summary>
-        public NodeCommandClass()
-        {
-            Version = -1;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZWaveLib.NodeCommandClass"/> class.
-        /// </summary>
-        /// <param name="id">Identifier.</param>
-        /// <param name="version">Version.</param>
-        public NodeCommandClass(byte id, int version = -1)
-        {
-            Id = id;
-            Version = version;
-        }
-    }
-
-    /// <summary>
-    /// Custom node data.
-    /// </summary>
-    public class NodeData
-    {
-        /// <summary>
-        /// Gets or sets the name for this data entry.
-        /// </summary>
-        /// <value>The name.</value>
-        public string Name { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>The value.</value>
-        public object Value { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZWaveLib.NodeData"/> class.
-        /// </summary>
-        /// <param name="fieldName">Field name.</param>
-        /// <param name="data">Data.</param>
-        public NodeData(string fieldName, object data)
-        {
-            Name = fieldName;
-            Value = data;
-        }
-    }
-
     /// <summary>
     /// Z-wave node object.
     /// </summary>
@@ -197,7 +42,7 @@ namespace ZWaveLib
     {
         #region Private fields
 
-        private ZWaveController controller;
+        private ZWaveController _controller;
 
         #endregion
 
@@ -241,14 +86,9 @@ namespace ZWaveLib
         public List<NodeData> Data { get; internal set; }
 
         /// <summary>
-        /// Node updated event handler.
-        /// </summary>
-        public delegate void NodeUpdatedEventHandler(object sender, NodeEvent eventData);
-
-        /// <summary>
         /// Occurs when node is updated.
         /// </summary>
-        public event NodeUpdatedEventHandler NodeUpdated;
+        public event Action<object, NodeEvent> NodeUpdated;
 
         #endregion
 
@@ -274,7 +114,7 @@ namespace ZWaveLib
         /// <param name="nodeId">Node identifier.</param>
         public ZWaveNode(ZWaveController controller, byte nodeId) : this()
         {
-            this.controller = controller;
+            _controller = controller;
             Id = nodeId;
         }
 
@@ -339,13 +179,13 @@ namespace ZWaveLib
         public NodeData GetData(string fieldId, object defaultValue = null)
         {
             var item = Data.Find(d => d.Name == fieldId);
-            if (item == null)
+            if (item != null)
+                return item;
+
+            if (defaultValue != null)
             {
-                if (defaultValue != null)
-                {
-                    item = new NodeData(fieldId, defaultValue);
-                    Data.Add(item);
-                }
+                item = new NodeData(fieldId, defaultValue);
+                Data.Add(item);
             }
             return item;
         }
@@ -429,10 +269,10 @@ namespace ZWaveLib
             return false;
         }
 
-        internal ZWaveMessage SendMessage(byte[] message)
+        public ZWaveMessage SendMessage(byte[] message)
         {
             var msg = new ZWaveMessage(message, MessageDirection.Outbound, true);
-            controller.QueueMessage(msg);
+            _controller.QueueMessage(msg);
             return msg;
         }
 
@@ -453,13 +293,59 @@ namespace ZWaveLib
 
         internal void SetController(ZWaveController controller)
         {
-            this.controller = controller;
+            this._controller = controller;
         }
 
-        internal virtual void OnNodeUpdated(NodeEvent zevent)
+        public void OnNodeUpdated(NodeEvent zevent)
         {
             if (NodeUpdated != null)
                 NodeUpdated(this, zevent);
+        }
+
+        public void ResendQueuedMessages()
+        {
+            var queuedMessages = (Queue<byte[]>)GetData("WakeUpResendQueue", new Queue<byte[]>()).Value;
+            
+            var i = 0;
+            while (queuedMessages.Count > 0)
+            {
+                var message = queuedMessages.Dequeue();
+                Utility.Logger.Trace("Sending message {0} {1}", ++i, BitConverter.ToString(message));
+                SendMessage(message);
+            }
+        }
+
+        public void ResendOnWakeUp(byte[] msg)
+        {
+            var minCommandLength = 8;
+            if (msg.Length < minCommandLength || msg[6] == (byte) CommandClass.WakeUp && msg[7] == Command.WakeUp.NoMoreInfo)
+                return;
+
+            var command = new byte[minCommandLength];
+            Array.Copy(msg, 0, command, 0, minCommandLength);
+            // discard any message having same header and command (first 8 bytes = header + command class + command)
+            var wakeUpResendQueue = (Queue<byte[]>)GetData("WakeUpResendQueue", new Queue<byte[]>()).Value;
+            for (int i = wakeUpResendQueue.Count - 1; i >= 0; i--)
+            {
+                var queuedMessage = wakeUpResendQueue.Peek();
+                var queuedCommand = new byte[minCommandLength];
+                Array.Copy(queuedMessage, 0, queuedCommand, 0, minCommandLength);
+                if (queuedCommand.SequenceEqual(command))
+                {
+                    Utility.Logger.Trace("Removing old message {0}", BitConverter.ToString(queuedMessage));
+                    wakeUpResendQueue.Dequeue();
+                }
+            }
+
+            Utility.Logger.Trace("Adding message {0}", BitConverter.ToString(msg));
+            wakeUpResendQueue.Enqueue(msg);
+            var wakeUpStatus = (WakeUpStatus)GetData("WakeUpStatus", new WakeUpStatus()).Value;
+            if (!wakeUpStatus.IsSleeping)
+            {
+                wakeUpStatus.IsSleeping = true;
+                var nodeEvent = new NodeEvent(this, EventParameter.WakeUpSleepingStatus, 1 /* 1 = sleeping, 0 = awake */, 0);
+                OnNodeUpdated(nodeEvent);
+            }
         }
 
         #endregion

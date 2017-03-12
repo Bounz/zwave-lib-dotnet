@@ -20,6 +20,8 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using ZWaveLib.Enums;
+
 namespace ZWaveLib.CommandClasses
 {
     public class SwitchMultilevel : ICommandClass
@@ -29,7 +31,8 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.SwitchMultilevel;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        // SDS12657 4.92.3 Multilevel Switch Report Command
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
             var cmdType = message[1];
@@ -43,6 +46,7 @@ namespace ZWaveLib.CommandClasses
             return nodeEvent;
         }
 
+        // SDS12657 4.92.1 Multilevel Switch Set Command
         public static ZWaveMessage Set(IZWaveNode node, int value)
         {
             return node.SendDataRequest(new[]
@@ -53,6 +57,7 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
+        // SDS12657 4.92.2 Multilevel Switch Get Command
         public static ZWaveMessage Get(IZWaveNode node)
         {
             return node.SendDataRequest(new[]
@@ -63,4 +68,3 @@ namespace ZWaveLib.CommandClasses
         }
     }
 }
-

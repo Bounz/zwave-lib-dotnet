@@ -33,13 +33,13 @@ namespace ZWaveLib
 
     public class NodeEvent
     {
-        public readonly ZWaveNode Node;
+        public readonly IZWaveNode Node;
         public readonly EventParameter Parameter;
         public readonly object Value;
         public int Instance { get; internal set; }
         public NodeEvent NestedEvent { get; internal set; }
 
-        public NodeEvent(ZWaveNode node, EventParameter eventType, object eventValue, int instance)
+        public NodeEvent(IZWaveNode node, EventParameter eventType, object eventValue, int instance)
         {
             this.Node = node;
             this.Parameter = eventType;

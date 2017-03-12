@@ -21,6 +21,7 @@
  */
 
 using System;
+using ZWaveLib.Enums;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -41,7 +42,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.ManufacturerSpecific;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
 

@@ -20,6 +20,8 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using ZWaveLib.Enums;
+
 namespace ZWaveLib.CommandClasses
 {
 
@@ -48,7 +50,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.ThermostatMode;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             return  new NodeEvent(node, EventParameter.ThermostatMode, (Value)message[2], 0);
         }

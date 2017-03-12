@@ -20,7 +20,7 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-namespace ZWaveLib
+namespace ZWaveLib.Enums
 {
     internal static class Command
     {
@@ -183,4 +183,3 @@ namespace ZWaveLib
         }
     }
 }
-

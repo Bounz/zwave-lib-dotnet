@@ -40,7 +40,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.Security;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             var cmdType = message[1];
             byte[] decryptedMessage;
@@ -153,7 +153,7 @@ namespace ZWaveLib.CommandClasses
 
         #region Public Security Command Class methods
 
-        public static void GetSupported(ZWaveNode node)
+        public static void GetSupported(IZWaveNode node)
         {
             var message = ZWaveMessage.BuildSendDataRequest(node.Id, new byte[] {
                 (byte)CommandClass.Security,
@@ -162,7 +162,7 @@ namespace ZWaveLib.CommandClasses
             SendMessage(node, message);
         }
 
-        public static void GetScheme(ZWaveNode node)
+        public static void GetScheme(IZWaveNode node)
         {
             node.SendDataRequest(new byte[] {
                 (byte)CommandClass.Security,
@@ -171,7 +171,7 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
-        private static void SetNetworkKey(ZWaveNode node)
+        private static void SetNetworkKey(IZWaveNode node)
         {
             var t_msg = new byte[18];
             t_msg[0] = (byte)CommandClass.Security;
@@ -186,7 +186,7 @@ namespace ZWaveLib.CommandClasses
             SendMessage(node, f_msg);
         }
 
-        public static void SendMessage(ZWaveNode node, byte[] message)
+        public static void SendMessage(IZWaveNode node, byte[] message)
         {
             int length = message[5];
 
@@ -231,7 +231,7 @@ namespace ZWaveLib.CommandClasses
             }
         }
 
-        public static SecurityData GetSecurityData(ZWaveNode node)
+        public static SecurityData GetSecurityData(IZWaveNode node)
         {
             return (SecurityData)node.GetData("SecurityData", new SecurityData(node)).Value;
         }
@@ -240,7 +240,7 @@ namespace ZWaveLib.CommandClasses
 
         #region Private helper methods
 
-        private static void QueuePayload(ZWaveNode node, SecutiryPayload payload)
+        private static void QueuePayload(IZWaveNode node, SecutiryPayload payload)
         {
             var nodeSecurityData = GetSecurityData(node);
 
@@ -256,7 +256,7 @@ namespace ZWaveLib.CommandClasses
             }
         }
 
-        private static bool RequestNonce(ZWaveNode node)
+        private static bool RequestNonce(IZWaveNode node)
         {
             var nodeSecurityData = GetSecurityData(node);
 
@@ -276,7 +276,7 @@ namespace ZWaveLib.CommandClasses
             return true;
         }
 
-        private static void SendNonceReport(ZWaveNode node)
+        private static void SendNonceReport(IZWaveNode node)
         {
             var message = new byte[10];
 
@@ -292,7 +292,7 @@ namespace ZWaveLib.CommandClasses
             GetSecurityData(node).ControllerNonceTimer.Reset();
         }
 
-        private static void ProcessNonceReport(ZWaveNode node, byte[] message, int start)
+        private static void ProcessNonceReport(IZWaveNode node, byte[] message, int start)
         {
             var nodeSecurityData = GetSecurityData(node);
             nodeSecurityData.DeviceNonceTimer.Restart();
@@ -314,7 +314,7 @@ namespace ZWaveLib.CommandClasses
         // IN the mesage to be Encrypted
         // OUT - true - message processed and sent - proceed to next one
         //     - false - we need to wait for the nonce report to come
-        private static bool EncryptMessage(ZWaveNode node, byte[] message)
+        private static bool EncryptMessage(IZWaveNode node, byte[] message)
         {
             var nodeSecurityData = GetSecurityData(node);
 
@@ -424,7 +424,7 @@ namespace ZWaveLib.CommandClasses
 
         }
 
-        private static byte[] DecryptMessage(ZWaveNode node, byte[] message, int start)
+        private static byte[] DecryptMessage(IZWaveNode node, byte[] message, int start)
         {
             var nodeSecurityData = GetSecurityData(node);
 

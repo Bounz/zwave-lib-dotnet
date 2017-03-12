@@ -21,6 +21,7 @@
 */
 
 using System;
+using ZWaveLib.Enums;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -52,7 +53,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.SensorBinary;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];

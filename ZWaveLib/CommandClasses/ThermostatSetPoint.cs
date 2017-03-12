@@ -22,7 +22,7 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
-
+using ZWaveLib.Enums;
 using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
@@ -52,7 +52,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.ThermostatSetPoint;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             ZWaveValue zvalue = ZWaveValue.ExtractValueFromBytes(message, 4);
             var setPoint = GetSetPointData(node);
@@ -91,7 +91,7 @@ namespace ZWaveLib.CommandClasses
             return node.SendDataRequest(message.ToArray());
         }
 
-        public static ZWaveValue GetSetPointData(ZWaveNode node)
+        public static ZWaveValue GetSetPointData(IZWaveNode node)
         {
             return (ZWaveValue)node.GetData("SetPoint", new ZWaveValue()).Value;
         }

@@ -33,7 +33,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.Crc16Encapsulated;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent zevent = null;
             byte cmdType = message[1];
@@ -48,7 +48,7 @@ namespace ZWaveLib.CommandClasses
 
         #region Private Helpers
 
-        private NodeEvent GetCrc16EncapEvent(ZWaveNode node, byte[] message)
+        private NodeEvent GetCrc16EncapEvent(IZWaveNode node, byte[] message)
         {
             // calculate CRC
             var messageToCheckLength = message.Length - 2;
@@ -71,7 +71,7 @@ namespace ZWaveLib.CommandClasses
             return ProcessEncapsulatedMessage(node, encapsulatedMessage);
         }
 
-        private NodeEvent ProcessEncapsulatedMessage(ZWaveNode node, byte[] encapMessage)
+        private NodeEvent ProcessEncapsulatedMessage(IZWaveNode node, byte[] encapMessage)
         {
             Utility.DebugLog(DebugMessageType.Information, String.Format("CRC16 encapsulated message: {0}", BitConverter.ToString(encapMessage)));
             NodeEvent nodeEvent = null;

@@ -21,6 +21,7 @@
  */
 
 using System;
+using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses
@@ -32,7 +33,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.MultiInstance;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
 
@@ -160,7 +161,7 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
-        private NodeEvent HandleMultiInstanceEncapReport(ZWaveNode node, byte[] message)
+        private NodeEvent HandleMultiInstanceEncapReport(IZWaveNode node, byte[] message)
         {
             if (message.Length < 5)
             {
@@ -187,7 +188,7 @@ namespace ZWaveLib.CommandClasses
             return zevent;
         }
 
-        private NodeEvent HandleMultiChannelEncapReport(ZWaveNode node, byte[] message)
+        private NodeEvent HandleMultiChannelEncapReport(IZWaveNode node, byte[] message)
         {
             if (message.Length < 6)
             {

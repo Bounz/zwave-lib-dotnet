@@ -33,7 +33,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.MultiCmd;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             byte i, offset = 3;
 

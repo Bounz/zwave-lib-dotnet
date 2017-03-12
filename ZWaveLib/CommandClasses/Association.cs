@@ -20,6 +20,8 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using ZWaveLib.Enums;
+
 namespace ZWaveLib.CommandClasses
 {
     public class Association : ICommandClass
@@ -37,7 +39,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.Association;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];

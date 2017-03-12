@@ -23,9 +23,9 @@ namespace ZWaveLib.Utilities
         public bool IsAddingNode = false;
         public bool IsNetworkKeySet = false;
 
-        public SecurityData(ZWaveNode node)
+        public SecurityData(IZWaveNode node)
         {
-            _parentNode = node;
+            _parentNode = (ZWaveNode)node;
         }
 
         public void SetPrivateNetworkKey(byte[] key)

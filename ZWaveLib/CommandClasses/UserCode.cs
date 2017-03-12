@@ -23,6 +23,7 @@
 
 using ZWaveLib.Values;
 using System.Collections.Generic;
+using ZWaveLib.Enums;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -33,7 +34,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.UserCode;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
@@ -69,7 +70,7 @@ namespace ZWaveLib.CommandClasses
             return GetUserCodeData(node);
         }
 
-        private static UserCodeValue GetUserCodeData(ZWaveNode node)
+        private static UserCodeValue GetUserCodeData(IZWaveNode node)
         {
             return (UserCodeValue)node.GetData("UserCode", new UserCodeValue()).Value;
         }

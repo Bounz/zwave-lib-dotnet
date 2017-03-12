@@ -247,7 +247,7 @@ namespace ZWaveLib
                 if (wakeUpStatus != null && wakeUpStatus.Value != null && ((WakeUpStatus)wakeUpStatus.Value).IsSleeping)
                 {
                     Utility.Logger.Warn("Node is flagged as sleeping, message will be re-sent on Wake Up (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", message.NodeId, message.CallbackId.ToString("X2"), message.Function, message.CommandClass);
-                    WakeUp.ResendOnWakeUp(node, message.RawData);
+                    node.ResendOnWakeUp(message.RawData);
                     addToQueue = false;
                 }
             }
@@ -788,7 +788,7 @@ namespace ZWaveLib
                                 if (node != null && node.SupportCommandClass(CommandClass.WakeUp) && WakeUp.GetAlwaysAwake(node) == false)
                                 {
                                     Utility.Logger.Warn("Node is flagged as sleeping, message will be re-sent on Wake Up (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", msg.NodeId, msg.CallbackId.ToString("X2"), msg.Function, msg.CommandClass);
-                                    WakeUp.ResendOnWakeUp(node, msg.RawData);
+                                    node.ResendOnWakeUp(msg.RawData);
                                 }
                             }
                         }

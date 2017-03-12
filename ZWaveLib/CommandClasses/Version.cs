@@ -21,6 +21,7 @@
 *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
 */
 
+using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
@@ -33,7 +34,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.Version;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
             var type = message[1];

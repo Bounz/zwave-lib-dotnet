@@ -9,7 +9,9 @@ namespace ZWaveLibTests.CommandClasses
     [TestFixture]
     public class SwitchMultilevelTests
     {
-        /* See "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification" page 99
+        /* 
+         * Information about the constants is taken from
+         * "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification" page 99
          * Switch Multilevel command class commands         */
         private const byte CommandClassSwitchMultilevel = 0x26; // COMMAND_CLASS_SWITCH_MULTILEVEL
         private const byte SwitchMultilevelSet = 0x01;          // SWITCH_MULTILEVEL_SET
@@ -17,15 +19,24 @@ namespace ZWaveLibTests.CommandClasses
         private const byte SwitchMultilevelReport = 0x03;       // SWITCH_MULTILEVEL_REPORT
 
         [Test]
+        public void GetCommandClass()
+        {
+            var commandClass = new SwitchMultilevel();
+            var classId = (byte)commandClass.GetClassId();
+
+            Assert.That(classId, Is.EqualTo(CommandClassSwitchMultilevel));
+        }
+
+        [Test]
         public void GetEvent_ParsesReportCommand()
         {
             var commandClass = new SwitchMultilevel();
             var message = new byte[] { CommandClassSwitchMultilevel, SwitchMultilevelReport, 0x63};
 
-            var zWaveEvent = commandClass.GetEvent(new ZWaveNode(), message);
+            var nodeEvent = commandClass.GetEvent(new ZWaveNode(), message);
 
-            Assert.That(zWaveEvent.Parameter, Is.EqualTo(EventParameter.SwitchMultilevel));
-            Assert.That(zWaveEvent.Value, Is.EqualTo(99));
+            Assert.That(nodeEvent.Parameter, Is.EqualTo(EventParameter.SwitchMultilevel));
+            Assert.That(nodeEvent.Value, Is.EqualTo(99));
         }
 
         [Test]
@@ -34,10 +45,10 @@ namespace ZWaveLibTests.CommandClasses
             var commandClass = new SwitchMultilevel();
             var message = new byte[] { CommandClassSwitchMultilevel, SwitchMultilevelSet, 0x62 };
 
-            var zWaveEvent = commandClass.GetEvent(new ZWaveNode(), message);
+            var nodeEvent = commandClass.GetEvent(new ZWaveNode(), message);
 
-            Assert.That(zWaveEvent.Parameter, Is.EqualTo(EventParameter.SwitchMultilevel));
-            Assert.That(zWaveEvent.Value, Is.EqualTo(98));
+            Assert.That(nodeEvent.Parameter, Is.EqualTo(EventParameter.SwitchMultilevel));
+            Assert.That(nodeEvent.Value, Is.EqualTo(98));
         }
 
         [Test]
@@ -60,15 +71,6 @@ namespace ZWaveLibTests.CommandClasses
 
             var expectedMessage = new[] { CommandClassSwitchMultilevel, SwitchMultilevelGet };
             node.Verify(x => x.SendDataRequest(It.Is<byte[]>(bytes => bytes.SequenceEqual(expectedMessage))));
-        }
-
-        [Test]
-        public void GetCommandClass()
-        {
-            var commandClass = new SwitchMultilevel();
-            var classId = (byte)commandClass.GetClassId();
-
-            Assert.That(classId, Is.EqualTo(CommandClassSwitchMultilevel));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ZWaveLib.CommandClasses;
 
 namespace ZWaveLib
@@ -14,7 +15,7 @@ namespace ZWaveLib
         byte[] SecuredNodeInformationFrame { get; set; }
         NodeVersion Version { get; set; }
 
-        event ZWaveNode.NodeUpdatedEventHandler NodeUpdated;
+        event Action<object, NodeEvent> NodeUpdated;
 
         NodeCommandClass GetCommandClass(CommandClass cclass);
         NodeData GetData(string fieldId, object defaultValue = null);
@@ -22,5 +23,11 @@ namespace ZWaveLib
         ZWaveMessage SendDataRequest(byte[] request);
         bool SupportCommandClass(CommandClass commandClass);
         void UpdateData(string fieldId, object value);
+
+        ZWaveMessage SendMessage(byte[] message);
+        void OnNodeUpdated(NodeEvent zevent);
+
+        void ResendOnWakeUp(byte[] msg);
+        void ResendQueuedMessages();
     }
 }

@@ -34,6 +34,6 @@ namespace ZWaveLib
         /// <param name="node">the Node triggered the command</param>
         /// <param name="message">command part of ZWave message (without headers and checksum)</param>
         /// <returns></returns>
-        NodeEvent GetEvent(ZWaveNode node, byte[] message);
+        NodeEvent GetEvent(IZWaveNode node, byte[] message);
     }
 }

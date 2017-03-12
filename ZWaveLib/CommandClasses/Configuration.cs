@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using ZWaveLib.Enums;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -33,7 +34,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.Configuration;
         }
 
-        public NodeEvent GetEvent(ZWaveNode node, byte[] message)
+        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
@@ -117,7 +118,7 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
-        private static Dictionary<byte, int> GetConfigParamsData(ZWaveNode node)
+        private static Dictionary<byte, int> GetConfigParamsData(IZWaveNode node)
         {
             return (Dictionary<byte, int>)node.GetData("ConfigParamsLength", new Dictionary<byte, int>()).Value;
         }
