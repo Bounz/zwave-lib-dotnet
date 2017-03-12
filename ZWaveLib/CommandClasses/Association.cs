@@ -43,7 +43,7 @@ namespace ZWaveLib.CommandClasses
             byte cmdType = message[1];
             
             // we want to get in to that we can handle NO Associations
-            if (message.Length > 4 && cmdType == (byte)Command.AssociationReport)
+            if (message.Length > 4 && cmdType == Command.Association.Report)
             {
                 byte groupId = message[2];
                 byte associationMax = message[3];
@@ -79,9 +79,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Set(ZWaveNode node, byte groupid, byte targetNodeId)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Association, 
-                (byte)Command.AssociationSet, 
+                Command.Association.Set, 
                 groupid, 
                 targetNodeId 
             });
@@ -89,18 +89,18 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node, byte groupId)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Association, 
-                (byte)Command.AssociationGet, 
+                Command.Association.Get, 
                 groupId 
             });
         }
 
         public static ZWaveMessage Remove(ZWaveNode node, byte groupId, byte targetNodeId)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Association, 
-                (byte)Command.AssociationRemove, 
+                Command.Association.Remove, 
                 groupId, 
                 targetNodeId 
             });

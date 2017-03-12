@@ -36,7 +36,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if ((message.Length > 0) && (cmdType == (byte)Command.ClockReport))
+            if ((message.Length > 0) && (cmdType == Command.Clock.Report))
             {
                 var clockValue = ClockValue.Parse (message);
                 nodeEvent = new NodeEvent(node, EventParameter.Clock, clockValue, 0);
@@ -47,9 +47,9 @@ namespace ZWaveLib.CommandClasses
         public static ZWaveMessage Set(ZWaveNode node, ClockValue value)
         {
             List<byte> message = new List<byte> ();
-            message.AddRange (new byte [] {
+            message.AddRange (new[] {
                 (byte)CommandClass.Clock,
-                (byte)Command.ClockSet
+                Command.Clock.Set
             });
             message.AddRange (value.GetValueBytes ());
 
@@ -58,9 +58,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Clock, 
-                (byte)Command.ClockGet 
+                Command.Clock.Get 
             });
         }
 

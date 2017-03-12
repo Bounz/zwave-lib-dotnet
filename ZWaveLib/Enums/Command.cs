@@ -22,125 +22,165 @@
 
 namespace ZWaveLib
 {
-    
-    public enum Command : byte
+    internal static class Command
     {
-        BasicSet = 0x01,
-        BasicGet = 0x02,
-        BasicReport = 0x03,
-        //
-        SwitchBinarySet = 0x01,
-        SwitchBinaryGet = 0x02,
-        SwitchBinaryReport = 0x03,
-        //
-        SwitchMultilevelSet = 0x01,
-        SwitchMultilevelGet = 0x02,
-        SwitchMultilevelReport = 0x03,
-        SwitchMultilevelStartLevelChange = 0x04,
-        SwitchMultilevelStopLevelChange = 0x05,
-        SwitchMultilevelSupportedGet = 0x06,
-        SwitchMultilevelSupportedReport = 0x07,
-        //
-        BatteryGet = 0x02,
-        BatteryReport = 0x03,
-        //
-        MeterGet = 0x01,
-        MeterReport = 0x02,
-        MeterSupportedGet = 0x03,
-        MeterSupportedReport = 0x04,
-        MeterReset = 0x05,
-        //
-        SensorBinaryGet = 0x02,
-        SensorBinaryReport = 0x03,
-        //
-        SensorMultilevelGet = 0x04,
-        /// <summary>
-        /// 0x05
-        /// </summary>
-        SensorMultilevelReport = 0x05,
-        //
-        SensorAlarmGet = 0x01,
-        SensorAlarmReport = 0x02,
-        SensorAlarmSupportedGet = 0x03,
-        SensorAlarmSupportedReport = 0x04,
-        //
-        AlarmGet = 0x04,
-        AlarmReport = 0x05,
+        internal class Basic
+        {
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+        }
 
-        // MultiInstance commands
-        /// <summary>
-        /// 0x01
-        /// </summary>
-        MultiInstanceSet = 0x01,
-        /// <summary>
-        /// 0x02
-        /// </summary>
-        MultiInstanceGet = 0x02,
-        /// <summary>
-        /// 0x04
-        /// </summary>
-        MultiInstanceCountGet = 0x04,
-        /// <summary>
-        /// 0x05
-        /// </summary>
-        MultiInstanceCountReport = 0x05,
-        /// <summary>
-        /// 0x06
-        /// </summary>
-        MultiInstanceEncapsulated = 0x06,
-        //
-        /// <summary>
-        /// 0x0D
-        /// </summary>
-        MultiChannelEncapsulated = 0x0D,
-        //
-        AssociationSet = 0x01,
-        AssociationGet = 0x02,
-        AssociationReport = 0x03,
-        AssociationRemove = 0x04,
-        //
-        ConfigurationSet = 0x04,
-        ConfigurationGet = 0x05,
-        ConfigurationReport = 0x06,
-        //
-        ManufacturerSpecificGet = 0x04,
-        //
-        WakeUpIntervalSet = 0x04,
-        WakeUpIntervalGet = 0x05,
-        WakeUpIntervalReport = 0x06,
-        WakeUpNotification = 0x07,
-        WakeUpNoMoreInfo = 0x08,
-        WakeUpIntervalCapabilitiesGet = 0x09,
-        WakeUpIntervalCapabilitiesReport = 0x0A,
-        //
-        VersionGet=0x11,
-        VersionReport=0x12,
-        VersionCommandClassGet = 0x13,
-        VersionCommandClassReport = 0x14,
-        //
-        ThermostatSetPointSet = 0x01,
-        ThermostatSetPointGet = 0x02,
-        ThermostatSetPointReport = 0x03,
-        ThermostatSetPointSupportedGet = 0x04,
-        ThermostatSetPointSupportedReport = 0x05,
-        //
-        SceneActivationSet = 0x01,
-        //
-        UserCodeReport = 0x03,
-        UserCodeSet = 0x01,
-        //
-        DoorLockSet = 0x01,
-        DoorLockGet = 0x02,
-        DoorLockReport = 0x03,
-        DoorLockConfigurationSet = 0x04,
-        DoorLockConfigurationGet = 0x05,
-        DoorLockConfigurationReport = 0x06,
-        //
-        ClockVersion = 0x01,
-        ClockGet = 0x05,
-        ClockSet = 0x04,
-        ClockReport = 0x06,
+        internal class SwitchBinary
+        {
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+        }
+
+        internal class SwitchMultilevel
+        {
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+            public const byte StartLevelChange = 0x04;
+            public const byte StopLevelChange = 0x05;
+            public const byte SupportedGet = 0x06;
+            public const byte SupportedReport = 0x07;
+        }
+
+        internal class Battery
+        {
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+        }
+
+        internal class Meter
+        {
+            public const byte Get = 0x01;
+            public const byte Report = 0x02;
+            public const byte SupportedGet = 0x03;
+            public const byte SupportedReport = 0x04;
+            public const byte Reset = 0x05;
+        }
+
+        internal class SensorBinary
+        {
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+        }
+
+        internal class SensorMultilevel
+        {
+            public const byte Get = 0x04;
+            public const byte Report = 0x05;
+        }
+
+        internal class SensorAlarm
+        {
+            public const byte Get = 0x01;
+            public const byte Report = 0x02;
+            public const byte SupportedGet = 0x03;
+            public const byte SupportedReport = 0x04;
+        }
+
+        internal class Alarm
+        {
+            public const byte Get = 0x04;
+            public const byte Report = 0x05;
+        }
+
+        internal class MultiInstance
+        {
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte CountGet = 0x04;
+            public const byte CountReport = 0x05;
+            public const byte Encapsulated = 0x06;
+        }
+
+        internal class MultiChannel
+        {
+            public const byte Encapsulated = 0x0D;
+        }
+
+        internal class Association
+        {
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+            public const byte Remove = 0x04;
+
+        }
+
+        internal class Configuration
+        {
+            public const byte Set = 0x04;
+            public const byte Get = 0x05;
+            public const byte Report = 0x06;
+        }
+
+        internal class ManufacturerSpecific
+        {
+            public const byte Get = 0x04;
+        }
+
+        internal class WakeUp
+        {
+            public const byte IntervalSet = 0x04;
+            public const byte IntervalGet = 0x05;
+            public const byte IntervalReport = 0x06;
+            public const byte Notification = 0x07;
+            public const byte NoMoreInfo = 0x08;
+            public const byte IntervalCapabilitiesGet = 0x09;
+            public const byte IntervalCapabilitiesReport = 0x0A;
+        }
+
+        internal class Version
+        {
+            public const byte Get = 0x11;
+            public const byte Report = 0x12;
+            public const byte CommandClassGet = 0x13;
+            public const byte CommandClassReport = 0x14;
+        }
+
+        internal class Thermostat
+        {
+            public const byte SetPointSet = 0x01;
+            public const byte SetPointGet = 0x02;
+            public const byte SetPointReport = 0x03;
+            public const byte SetPointSupportedGet = 0x04;
+            public const byte SetPointSupportedReport = 0x05;
+        }
+
+        internal class Scene
+        {
+            public const byte ActivationSet = 0x01;
+        }
+
+        internal class UserCode
+        {
+            public const byte Report = 0x03;
+            public const byte Set = 0x01;
+        }
+
+        internal class DoorLock
+        {
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+            public const byte ConfigurationSet = 0x04;
+            public const byte ConfigurationGet = 0x05;
+            public const byte ConfigurationReport = 0x06;
+        }
+
+        internal class Clock
+        {
+            public const byte Version = 0x01;
+            public const byte Get = 0x05;
+            public const byte Set = 0x04;
+            public const byte Report = 0x06;
+        }
     }
-
 }
 

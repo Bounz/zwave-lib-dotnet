@@ -20,8 +20,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using System;
-
 namespace ZWaveLib.CommandClasses
 {
     public class SwitchBinary : ICommandClass
@@ -35,9 +33,9 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.SwitchBinaryReport || cmdType == (byte)Command.SwitchBinarySet) // some devices use this instead of report
+            if (cmdType == Command.SwitchBinary.Report || cmdType == Command.SwitchBinary.Set) // some devices use this instead of report
             {
-                int levelValue = (int)message[2];
+                int levelValue = message[2];
                 nodeEvent = new NodeEvent(node, EventParameter.SwitchBinary, (double)levelValue, 0);
             }
             return nodeEvent;
@@ -45,18 +43,18 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Set(ZWaveNode node, int value)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.SwitchBinary, 
-                (byte)Command.SwitchBinarySet, 
+                Command.SwitchBinary.Set, 
                 byte.Parse(value.ToString())
             });
         }
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.SwitchBinary, 
-                (byte)Command.SwitchBinaryGet 
+                Command.SwitchBinary.Get 
             });
         }
     }

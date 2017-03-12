@@ -33,9 +33,9 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.BasicReport || cmdType == (byte)Command.BasicSet)
+            if (cmdType == Command.Basic.Report || cmdType == Command.Basic.Set)
             {
-                int levelValue = (int)message[2];
+                int levelValue = message[2];
                 nodeEvent = new NodeEvent(node, EventParameter.Basic, (double)levelValue, 0);
             }
             return nodeEvent;
@@ -43,18 +43,18 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Set(ZWaveNode node, int value)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Basic, 
-                (byte)Command.BasicSet, 
+                Command.Basic.Set, 
                 byte.Parse(value.ToString())
             });
         }
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Basic, 
-                (byte)Command.BasicGet 
+                Command.Basic.Get 
             });
         }
 

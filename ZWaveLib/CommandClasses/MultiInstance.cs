@@ -22,7 +22,6 @@
 
 using System;
 using ZWaveLib.Utilities;
-using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -43,37 +42,37 @@ namespace ZWaveLib.CommandClasses
 
             switch (cmdType)
             {
-            case (byte)Command.MultiInstanceEncapsulated:
-                nodeEvent = HandleMultiInstanceEncapReport(node, message);
-                break;
+                case Command.MultiInstance.Encapsulated:
+                    nodeEvent = HandleMultiInstanceEncapReport(node, message);
+                    break;
 
-            //case (byte) Command.MultiInstanceReport:
-            case (byte) Command.MultiChannelEncapsulated:
-                nodeEvent = HandleMultiChannelEncapReport(node, message);
-                //if (nodeEvent != null)
-                //{
-                //    nodeEvent.Instance = (int) message[2];
-                //}
-                break;
+                //case (byte) Command.MultiInstanceReport:
+                case Command.MultiChannel.Encapsulated:
+                    nodeEvent = HandleMultiChannelEncapReport(node, message);
+                    //if (nodeEvent != null)
+                    //{
+                    //    nodeEvent.Instance = (int) message[2];
+                    //}
+                    break;
 
-            case (byte) Command.MultiInstanceCountReport:
-                byte instanceCount = message[3];
-                switch (instanceCmdClass)
-                {
-                case (byte) CommandClass.SwitchBinary:
-                    nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchBinaryCount, instanceCount, 0);
+                case Command.MultiInstance.CountReport:
+                    byte instanceCount = message[3];
+                    switch (instanceCmdClass)
+                    {
+                        case (byte) CommandClass.SwitchBinary:
+                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchBinaryCount, instanceCount, 0);
+                            break;
+                        case (byte) CommandClass.SwitchMultilevel:
+                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchMultilevelCount, instanceCount, 0);
+                            break;
+                        case (byte) CommandClass.SensorBinary:
+                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorBinaryCount, instanceCount, 0);
+                            break;
+                        case (byte) CommandClass.SensorMultilevel:
+                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorMultilevelCount, instanceCount, 0);
+                            break;
+                    }
                     break;
-                case (byte) CommandClass.SwitchMultilevel:
-                    nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchMultilevelCount, instanceCount, 0);
-                    break;
-                case (byte) CommandClass.SensorBinary:
-                    nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorBinaryCount, instanceCount, 0);
-                    break;
-                case (byte) CommandClass.SensorMultilevel:
-                    nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorMultilevelCount, instanceCount, 0);
-                    break;
-                }
-                break;
 
             }
 
@@ -82,9 +81,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage GetCount(ZWaveNode node, byte commandClass)
         {
-            return node.SendDataRequest(new byte[] {
+            return node.SendDataRequest(new[] {
                 (byte)CommandClass.MultiInstance,
-                (byte)Command.MultiInstanceCountGet,
+                Command.MultiInstance.CountGet,
                 commandClass
             });
         }
@@ -97,7 +96,7 @@ namespace ZWaveLib.CommandClasses
                 0x00, // ??
                 instance,
                 (byte)CommandClass.SwitchBinary,
-                (byte)Command.MultiInstanceGet
+                Command.MultiInstance.Get
             });
         }
 
@@ -109,7 +108,7 @@ namespace ZWaveLib.CommandClasses
                 0x00, // ??
                 instance,
                 (byte)CommandClass.SwitchBinary,
-                (byte)Command.MultiInstanceSet,
+                Command.MultiInstance.Set,
                 byte.Parse(value.ToString())
             });
         }
@@ -122,7 +121,7 @@ namespace ZWaveLib.CommandClasses
                 0x00, // ??
                 instance,
                 (byte)CommandClass.SwitchMultilevel,
-                (byte)Command.MultiInstanceGet
+                Command.MultiInstance.Get
             });
         }
 
@@ -134,7 +133,7 @@ namespace ZWaveLib.CommandClasses
                 0x00, // ??
                 instance,
                 (byte)CommandClass.SwitchMultilevel,
-                (byte)Command.MultiInstanceSet,
+                Command.MultiInstance.Set,
                 byte.Parse(value.ToString())
             });
         }

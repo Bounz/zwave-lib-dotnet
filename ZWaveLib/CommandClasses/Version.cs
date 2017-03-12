@@ -20,7 +20,7 @@
 *     Author: https://github.com/bounz
 *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
 */
-using System;
+
 using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
@@ -36,9 +36,9 @@ namespace ZWaveLib.CommandClasses
         public NodeEvent GetEvent(ZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
-            var type = (Command)message[1];
+            var type = message[1];
 
-            if (type == Command.VersionReport)
+            if (type == Command.Version.Report)
             {
                 var nodeVersion = new NodeVersion {
                     LibraryType = message[2],
@@ -51,7 +51,7 @@ namespace ZWaveLib.CommandClasses
                 nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, nodeVersion, 0);
             }
 
-            if (type == Command.VersionCommandClassReport)
+            if (type == Command.Version.CommandClassReport)
             {
                 var cmdClass = (CommandClass)message[2];
                 var value = new VersionValue(cmdClass, message[3]);
@@ -66,7 +66,7 @@ namespace ZWaveLib.CommandClasses
                 }
                 else
                 {
-                    Utility.logger.Warn("Command Class {0} ({1}) not supported yet", message[3], message[3].ToString("X2"));
+                    Utility.Logger.Warn("Command Class {0} ({1}) not supported yet", message[3], message[3].ToString("X2"));
                 }
             }
 
@@ -75,18 +75,18 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node, CommandClass cmdClass)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Version, 
-                (byte)Command.VersionCommandClassGet,
+                Command.Version.CommandClassGet,
                 (byte)cmdClass
             });
         }
 
         public static ZWaveMessage Report(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Version, 
-                (byte)Command.VersionGet,
+                Command.Version.Get,
             });
         }
     }

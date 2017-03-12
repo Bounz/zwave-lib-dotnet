@@ -246,7 +246,7 @@ namespace ZWaveLib
                 var wakeUpStatus = node.GetData("WakeUpStatus");
                 if (wakeUpStatus != null && wakeUpStatus.Value != null && ((WakeUpStatus)wakeUpStatus.Value).IsSleeping)
                 {
-                    Utility.logger.Warn("Node is flagged as sleeping, message will be re-sent on Wake Up (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", message.NodeId, message.CallbackId.ToString("X2"), message.Function, message.CommandClass);
+                    Utility.Logger.Warn("Node is flagged as sleeping, message will be re-sent on Wake Up (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", message.NodeId, message.CallbackId.ToString("X2"), message.Function, message.CommandClass);
                     WakeUp.ResendOnWakeUp(node, message.RawData);
                     addToQueue = false;
                 }
@@ -271,21 +271,21 @@ namespace ZWaveLib
         public bool SendMessage(ZWaveMessage message)
         {
             #region Debug 
-            Utility.logger.Trace("[[[ BEGIN REQUEST ]]]");
+            Utility.Logger.Trace("[[[ BEGIN REQUEST ]]]");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             #endregion
             SetQueryStage(QueryStage.WaitAck);
             pendingRequest = message;
             sendMessageAck.Reset();
-            Utility.logger.Trace("Sending Message (Node={0}, CallbackId={1}, Function={2}, CommandClass={3})", pendingRequest.NodeId, pendingRequest.CallbackId.ToString("X2"), pendingRequest.Function, pendingRequest.CommandClass);
+            Utility.Logger.Trace("Sending Message (Node={0}, CallbackId={1}, Function={2}, CommandClass={3})", pendingRequest.NodeId, pendingRequest.CallbackId.ToString("X2"), pendingRequest.Function, pendingRequest.CommandClass);
             if (serialPort.SendMessage(message.RawData))
             {
                 if (!sendMessageAck.WaitOne(ZWaveMessage.SendMessageTimeoutMs))
                 {
                     SetQueryStage(QueryStage.Error);
                     // TODO: Dump Diagnostic Statistics
-                    Utility.logger.Warn("Message timeout (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", pendingRequest.NodeId, pendingRequest.CallbackId.ToString("X2"), pendingRequest.Function, pendingRequest.CommandClass);
+                    Utility.Logger.Warn("Message timeout (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", pendingRequest.NodeId, pendingRequest.CallbackId.ToString("X2"), pendingRequest.Function, pendingRequest.CommandClass);
                     if (message.NodeId > 1)
                         UpdateOperationProgress(message.NodeId, NodeQueryStatus.Timeout);
                     //System.Diagnostics.Debugger.Break();
@@ -294,12 +294,12 @@ namespace ZWaveLib
             else
             {
                 SetQueryStage(QueryStage.Error);
-                Utility.logger.Warn("Controller status error (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", pendingRequest.NodeId, pendingRequest.CallbackId.ToString("X2"), pendingRequest.Function, pendingRequest.CommandClass);
+                Utility.Logger.Warn("Controller status error (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", pendingRequest.NodeId, pendingRequest.CallbackId.ToString("X2"), pendingRequest.Function, pendingRequest.CommandClass);
             }
             pendingRequest = null;
             #region Debug 
             stopWatch.Stop();
-            Utility.logger.Trace("[[[ END REQUEST ]]] took {0} ms", stopWatch.ElapsedMilliseconds);
+            Utility.Logger.Trace("[[[ END REQUEST ]]] took {0} ms", stopWatch.ElapsedMilliseconds);
             #endregion
             return (currentStage != QueryStage.Error);
         }
@@ -309,7 +309,7 @@ namespace ZWaveLib
         /// </summary>
         public void SoftReset()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             byte[] message = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x04,
@@ -319,7 +319,7 @@ namespace ZWaveLib
                 0x00
             };
             SendMessage(new ZWaveMessage(message, MessageDirection.Outbound, true));
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace ZWaveLib
         /// </summary>
         public void HardReset()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             byte[] message = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x04,
@@ -338,7 +338,7 @@ namespace ZWaveLib
             };
             SendMessage(new ZWaveMessage(message, MessageDirection.Outbound, false));
             nodeList.Clear();
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
         }
 
         #endregion
@@ -350,7 +350,7 @@ namespace ZWaveLib
         /// </summary>
         public void Initialize()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             Thread.Sleep(1000);
             OnControllerStatusChanged(new ControllerStatusEventArgs(ControllerStatus.Initializing));
             var initialized = SendMessage(new ZWaveMessage(new byte[] { 0x01, 0x03, 0x00, (byte)ZWaveFunction.GetInitData, 0x00 }, MessageDirection.Outbound, false));
@@ -358,7 +358,7 @@ namespace ZWaveLib
                 OnControllerStatusChanged(new ControllerStatusEventArgs(ControllerStatus.Ready));
             else
                 OnControllerStatusChanged(new ControllerStatusEventArgs(ControllerStatus.Error));
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace ZWaveLib
                         discoveryError = true;
                         break;
                     }
-                    Utility.logger.Trace("Getting protocol info for node {0}", zn.Id);
+                    Utility.Logger.Trace("Getting protocol info for node {0}", zn.Id);
                     // Get Generic/Basic/Specific Class if not already cached
                     if (zn.ProtocolInfo.BasicType == 0 && zn.ProtocolInfo.GenericType == 0 && zn.ProtocolInfo.SpecificType == 0)
                         GetNodeProtocolInfo(zn.Id);
@@ -430,7 +430,7 @@ namespace ZWaveLib
                         discoveryError = true;
                         break;
                     }
-                    Utility.logger.Trace("Querying/Updating node {0}", zn.Id);
+                    Utility.Logger.Trace("Querying/Updating node {0}", zn.Id);
 
                     // TODO: should check for SecureNodeInformationFrame as well??
 
@@ -467,7 +467,7 @@ namespace ZWaveLib
             }
             else
             {
-                Utility.logger.Warn("Discovery already running");
+                Utility.Logger.Warn("Discovery already running");
             }
         }
 
@@ -489,7 +489,7 @@ namespace ZWaveLib
                         healError = true;
                         break;
                     }
-                    Utility.logger.Trace("Healing node {0}", zn.Id);
+                    Utility.Logger.Trace("Healing node {0}", zn.Id);
                     RequestNeighborsUpdateOptions(zn.Id);
                     RequestNeighborsUpdate(zn.Id);
                     GetNeighborsRoutingInfo(zn.Id);
@@ -503,7 +503,7 @@ namespace ZWaveLib
             }
             else
             {
-                Utility.logger.Warn("Heal already running");
+                Utility.Logger.Warn("Heal already running");
             }
         }
 
@@ -530,7 +530,7 @@ namespace ZWaveLib
         /// <param name="nodeId">Node identifier.</param>
         public ZWaveMessage GetNodeInformationFrame(byte nodeId)
         {
-            Utility.logger.Debug("Node {0}", nodeId);
+            Utility.Logger.Debug("Node {0}", nodeId);
             byte[] message = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x04,
@@ -549,7 +549,7 @@ namespace ZWaveLib
         /// <param name="nodeId">Node identifier.</param>
         public ZWaveMessage GetNodeProtocolInfo(byte nodeId)
         {
-            Utility.logger.Debug("Node {0}", nodeId);
+            Utility.Logger.Debug("Node {0}", nodeId);
             byte[] message = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x04,
@@ -591,7 +591,7 @@ namespace ZWaveLib
         /// <returns>The node add.</returns>
         public ZWaveMessage BeginNodeAdd()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             byte[] header = new byte[] {
                 (byte)FrameHeader.SOF, /* Start Of Frame */
                 0x05, /*packet len */
@@ -605,7 +605,7 @@ namespace ZWaveLib
             System.Array.Copy(footer, 0, message, message.Length - footer.Length, footer.Length);
 
             var msg = QueueMessage(new ZWaveMessage(message, MessageDirection.Outbound, true)).Wait();
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
             return msg;
         }
 
@@ -616,7 +616,7 @@ namespace ZWaveLib
         /// <returns>The node add.</returns>
         public ZWaveMessage StopNodeAdd()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             byte[] header = new byte[] {
                 (byte)FrameHeader.SOF, /* Start Of Frame */
                 0x05 /*packet len */,
@@ -630,7 +630,7 @@ namespace ZWaveLib
             System.Array.Copy(footer, 0, message, message.Length - footer.Length, footer.Length);
 
             var msg = QueueMessage(new ZWaveMessage(message, MessageDirection.Outbound, true)).Wait();
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
             return msg;
         }
 
@@ -641,7 +641,7 @@ namespace ZWaveLib
         /// <returns>The node remove.</returns>
         public ZWaveMessage BeginNodeRemove()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             byte[] header = new byte[] {
                 (byte)FrameHeader.SOF, /* Start Of Frame */
                 0x05 /*packet len */,
@@ -655,7 +655,7 @@ namespace ZWaveLib
             System.Array.Copy(footer, 0, message, message.Length - footer.Length, footer.Length);
 
             var msg = QueueMessage(new ZWaveMessage(message, MessageDirection.Outbound, true)).Wait();
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
             return msg;
         }
 
@@ -666,7 +666,7 @@ namespace ZWaveLib
         /// <returns>The node remove.</returns>
         public ZWaveMessage StopNodeRemove()
         {
-            Utility.logger.Trace("BEGIN");
+            Utility.Logger.Trace("BEGIN");
             byte[] header = new byte[] {
                 (byte)FrameHeader.SOF, /* Start Of Frame */
                 0x05 /*packet len */,
@@ -680,7 +680,7 @@ namespace ZWaveLib
             System.Array.Copy(footer, 0, message, message.Length - footer.Length, footer.Length);
 
             var msg = QueueMessage(new ZWaveMessage(message, MessageDirection.Outbound, true)).Wait();
-            Utility.logger.Trace("END");
+            Utility.Logger.Trace("END");
             return msg;
         }
 
@@ -695,7 +695,7 @@ namespace ZWaveLib
         /// <param name="nodeId">Node identifier.</param>
         public ZWaveMessage RequestNeighborsUpdateOptions(byte nodeId)
         {
-            Utility.logger.Debug("Node {0}", nodeId);
+            Utility.Logger.Debug("Node {0}", nodeId);
             var msg = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x06, /* packet length */
@@ -716,7 +716,7 @@ namespace ZWaveLib
         /// <param name="nodeId">Node identifier.</param>
         public ZWaveMessage RequestNeighborsUpdate(byte nodeId)
         {
-            Utility.logger.Debug("Node {0}", nodeId);
+            Utility.Logger.Debug("Node {0}", nodeId);
             var msg = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x05, /* packet length */
@@ -736,7 +736,7 @@ namespace ZWaveLib
         /// <param name="nodeId">Node identifier.</param>
         public ZWaveMessage GetNeighborsRoutingInfo(byte nodeId)
         {
-            Utility.logger.Debug("Node {0}", nodeId);
+            Utility.Logger.Debug("Node {0}", nodeId);
             var msg = new byte[] {
                 (byte)FrameHeader.SOF,
                 0x07, /* packet length */
@@ -773,21 +773,21 @@ namespace ZWaveLib
                         while (!SendMessage(msg) && msg.ResendCount < ZWaveMessage.ResendAttemptsMax && !disposing)
                         {
                             msg.ResendCount++;
-                            Utility.logger.Warn("Could not deliver message to Node {0} (CallbackId={1}, Retry={2})", msg.NodeId, msg.CallbackId.ToString("X2"), msg.ResendCount);
+                            Utility.Logger.Warn("Could not deliver message to Node {0} (CallbackId={1}, Retry={2})", msg.NodeId, msg.CallbackId.ToString("X2"), msg.ResendCount);
                             Thread.Sleep(commandRetryDelay);
                         }
                         msg.sentAck.Set();
                     
                         if (msg.ResendCount == ZWaveMessage.ResendAttemptsMax)
                         {
-                            Utility.logger.Warn("Delivery of message to Node {0} failed (CallbackId={1}).", msg.NodeId, msg.CallbackId.ToString("X2"));
+                            Utility.Logger.Warn("Delivery of message to Node {0} failed (CallbackId={1}).", msg.NodeId, msg.CallbackId.ToString("X2"));
                             if (msg.NodeId > 1)
                             {
                                 UpdateOperationProgress(msg.NodeId, NodeQueryStatus.Error);
                                 var node = GetNode(msg.NodeId);
                                 if (node != null && node.SupportCommandClass(CommandClass.WakeUp) && WakeUp.GetAlwaysAwake(node) == false)
                                 {
-                                    Utility.logger.Warn("Node is flagged as sleeping, message will be re-sent on Wake Up (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", msg.NodeId, msg.CallbackId.ToString("X2"), msg.Function, msg.CommandClass);
+                                    Utility.Logger.Warn("Node is flagged as sleeping, message will be re-sent on Wake Up (Node={0}, CallbackId={0}, Function={1}, CommandClass={2})", msg.NodeId, msg.CallbackId.ToString("X2"), msg.Function, msg.CommandClass);
                                     WakeUp.ResendOnWakeUp(node, msg.RawData);
                                 }
                             }
@@ -795,7 +795,7 @@ namespace ZWaveLib
                     }
                     else
                     {
-                        Utility.logger.Warn("Controller not ready, delivery of message to Node {0} failed (CallbackId={1}).", msg.NodeId, msg.CallbackId.ToString("X2"));
+                        Utility.Logger.Warn("Controller not ready, delivery of message to Node {0} failed (CallbackId={1}).", msg.NodeId, msg.CallbackId.ToString("X2"));
                         if (msg.NodeId > 1)
                             UpdateOperationProgress(msg.NodeId, NodeQueryStatus.Error);
                     }
@@ -812,7 +812,7 @@ namespace ZWaveLib
         {
             if (DupeMessageCheck(msg))
             {
-                Utility.logger.Warn("Repeated message discarded.");
+                Utility.Logger.Warn("Repeated message discarded.");
                 return;
             }
 
@@ -971,7 +971,7 @@ namespace ZWaveLib
                         break;
 
                     default:
-                        Utility.logger.Warn("Unhandled Node Neighbor Update request: {0}", BitConverter.ToString(rawData));
+                        Utility.Logger.Warn("Unhandled Node Neighbor Update request: {0}", BitConverter.ToString(rawData));
                         break;
 
                     }
@@ -1012,12 +1012,12 @@ namespace ZWaveLib
                         }
                         catch (Exception ex)
                         {
-                            Utility.logger.Error(ex);
+                            Utility.Logger.Error(ex);
                         }
                     }
                     else
                     {
-                        Utility.logger.Error("Unknown node id {0}", rawData[5]);
+                        Utility.Logger.Error("Unknown node id {0}", rawData[5]);
                     }
                     break;
 
@@ -1062,7 +1062,7 @@ namespace ZWaveLib
                     break;
 
                 default:
-                    Utility.logger.Warn("Unhandled request message: {0}", BitConverter.ToString(rawData));
+                    Utility.Logger.Warn("Unhandled request message: {0}", BitConverter.ToString(rawData));
                     break;
 
                 }
@@ -1084,12 +1084,12 @@ namespace ZWaveLib
                     {
                         byte[] homeId = new byte[4] { rawData[4], rawData[5], rawData[6], rawData[7] };
                         byte nodeId = rawData[2]; // <-- perhaps this is rawData[8] ...
-                        Utility.logger.Info("Home Id is {0}, Controller node id is {1}", BitConverter.ToString(homeId), nodeId);
+                        Utility.Logger.Info("Home Id is {0}, Controller node id is {1}", BitConverter.ToString(homeId), nodeId);
                         // TODO: complete this code
                     }
                     else
                     {
-                        Utility.logger.Warn("Could not read Home Id.");
+                        Utility.Logger.Warn("Could not read Home Id.");
                     }
                     break;
 
@@ -1097,7 +1097,7 @@ namespace ZWaveLib
                 case ZWaveFunction.GetControllerCapabilities:
                 case ZWaveFunction.GetSucNodeId:
                     // TODO: complete this code
-                    Utility.logger.Warn("Response handling for {0} not implemented yet!", msg.Function);
+                    Utility.Logger.Warn("Response handling for {0} not implemented yet!", msg.Function);
                     break;
 
                 case ZWaveFunction.GetNodeProtocolInfo:
@@ -1128,12 +1128,12 @@ namespace ZWaveLib
                     }
                     else
                     {
-                        Utility.logger.Warn("No routing nodes reported.");
+                        Utility.Logger.Warn("No routing nodes reported.");
                     }
                     break;
 
                 default:
-                    Utility.logger.Warn("Unhandled response message: {0}", BitConverter.ToString(rawData));
+                    Utility.Logger.Warn("Unhandled response message: {0}", BitConverter.ToString(rawData));
                     break;
 
                 }
@@ -1141,7 +1141,7 @@ namespace ZWaveLib
                 break;
 
             default:
-                Utility.logger.Warn("Unhandled message type: {0}", BitConverter.ToString(rawData));
+                Utility.Logger.Warn("Unhandled message type: {0}", BitConverter.ToString(rawData));
                 break;
             }
 
@@ -1153,7 +1153,7 @@ namespace ZWaveLib
         /// <param name="stage">Stage.</param>
         private void SetQueryStage(QueryStage stage)
         {
-            Utility.logger.Trace(stage);
+            Utility.Logger.Trace(stage);
             currentStage = stage;
             // If query stage is complete, unlock SendMessage
             if (stage == QueryStage.Complete || stage == QueryStage.Error)
@@ -1229,7 +1229,7 @@ namespace ZWaveLib
                 else
                 {
                     SendNack();
-                    Utility.logger.Warn("Bad message checksum");
+                    Utility.Logger.Warn("Bad message checksum");
                 }
             }
             else if (zm.Header == FrameHeader.CAN)
@@ -1238,7 +1238,7 @@ namespace ZWaveLib
             }
             else
             {
-                Utility.logger.Warn("Unhandled message type: {0}", BitConverter.ToString(zm.RawData));
+                Utility.Logger.Warn("Unhandled message type: {0}", BitConverter.ToString(zm.RawData));
             }
         }
 
@@ -1318,7 +1318,7 @@ namespace ZWaveLib
                 Array.Copy(message, 0, merged, serialBuffer.Length, message.Length);
                 message = merged;
                 serialBuffer = null;
-                Utility.logger.Trace("Merged buffer to message: {0}", BitConverter.ToString(message));
+                Utility.Logger.Trace("Merged buffer to message: {0}", BitConverter.ToString(message));
             }
 
             // Extract Z-Wave frames from incoming serial port data
@@ -1357,7 +1357,7 @@ namespace ZWaveLib
                 {
                     serialBuffer = new byte[message.Length];
                     Array.Copy(message, 0, serialBuffer, 0, serialBuffer.Length);
-                    Utility.logger.Trace("Expected message length is {0}, currently received length is {1}", msgLength + 2, message.Length);
+                    Utility.Logger.Trace("Expected message length is {0}, currently received length is {1}", msgLength + 2, message.Length);
                     return;
                 }
             }
@@ -1368,7 +1368,7 @@ namespace ZWaveLib
             }
             catch (Exception e)
             {
-                Utility.logger.Error(e);
+                Utility.Logger.Error(e);
             }
 
             if (nextMessage != null)
@@ -1462,7 +1462,7 @@ namespace ZWaveLib
                 }
                 catch (Exception e)
                 {
-                    Utility.logger.Error(e);
+                    Utility.Logger.Error(e);
                 }
             }
         }
@@ -1481,7 +1481,7 @@ namespace ZWaveLib
             }
             catch (Exception e)
             {
-                Utility.logger.Error(e);
+                Utility.Logger.Error(e);
             }
         }
 
@@ -1507,7 +1507,7 @@ namespace ZWaveLib
         /// <param name="args">Arguments.</param>
         protected virtual void OnNodeUpdated(NodeUpdatedEventArgs args)
         {
-            Utility.logger.Debug("NodeUpdated (NodeId={0}, Parameter={1}, Value={2})", args.NodeId, args.Event.Parameter, args.Event.Value);
+            Utility.Logger.Debug("NodeUpdated (NodeId={0}, Parameter={1}, Value={2})", args.NodeId, args.Event.Parameter, args.Event.Value);
             if (NodeUpdated != null)
                 NodeUpdated(this, args);
         }
@@ -1518,7 +1518,7 @@ namespace ZWaveLib
         /// <param name="args">Arguments.</param>
         protected virtual void OnDiscoveryProgress(DiscoveryProgressEventArgs args)
         {
-            Utility.logger.Debug(args.Status);
+            Utility.Logger.Debug(args.Status);
             if (DiscoveryProgress != null)
                 DiscoveryProgress(this, args);
         }
@@ -1529,7 +1529,7 @@ namespace ZWaveLib
         /// <param name="args">Arguments.</param>
         protected virtual void OnHealProgress(HealProgressEventArgs args)
         {
-            Utility.logger.Debug(args.Status);
+            Utility.Logger.Debug(args.Status);
             if (HealProgress != null)
                 HealProgress(this, args);
         }
@@ -1540,7 +1540,7 @@ namespace ZWaveLib
         /// <param name="args">Arguments.</param>
         protected virtual void OnNodeOperationProgress(NodeOperationProgressEventArgs args)
         {
-            Utility.logger.Debug("{0} {1}", args.NodeId, args.Status);
+            Utility.Logger.Debug("{0} {1}", args.NodeId, args.Status);
             if (NodeOperationProgress != null)
                 NodeOperationProgress(this, args);
         }
@@ -1552,7 +1552,7 @@ namespace ZWaveLib
         protected virtual void OnControllerStatusChanged(ControllerStatusEventArgs args)
         {
             controllerStatus = args.Status;
-            Utility.logger.Debug("{0}", controllerStatus);
+            Utility.Logger.Debug("{0}", controllerStatus);
             if (controllerStatus == ControllerStatus.Disconnected)
                 queuedMessages.Clear();
             if (ControllerStatusChanged != null)

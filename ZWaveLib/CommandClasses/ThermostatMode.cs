@@ -55,17 +55,17 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.ThermostatMode, 
-                (byte)Command.BasicGet
+                Command.Basic.Get
             });
         }
 
         public static ZWaveMessage Set(ZWaveNode node, Value mode)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.ThermostatMode, 
-                (byte)Command.BasicSet, 
+                Command.Basic.Set, 
                 (byte)mode
             });
         }

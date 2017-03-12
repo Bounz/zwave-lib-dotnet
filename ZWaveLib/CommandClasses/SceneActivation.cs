@@ -20,9 +20,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using System;
-using ZWaveLib.Values;
-
 namespace ZWaveLib.CommandClasses
 {
     public class SceneActivation : ICommandClass
@@ -36,14 +33,11 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.SceneActivationSet)
+            if (cmdType == Command.Scene.ActivationSet)
             {
                 nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, (double)message[2], 0);
             }
             return nodeEvent;
         }
-
     }
 }
-
-

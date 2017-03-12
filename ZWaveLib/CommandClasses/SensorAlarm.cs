@@ -19,8 +19,7 @@
  *     Author: Generoso Martello <gene@homegenie.it>
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
-
-using System;
+ 
 using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
@@ -36,7 +35,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.SensorAlarmReport)
+            if (cmdType == Command.SensorAlarm.Report)
             {
                 var alarm = AlarmValue.Parse(message);
                 nodeEvent = new NodeEvent(node, alarm.EventType, alarm.Value, 0);

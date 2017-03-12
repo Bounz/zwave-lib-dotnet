@@ -35,7 +35,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.MeterReport)
+            if (cmdType == Command.Meter.Report)
             {
                 EnergyValue energy = EnergyValue.Parse(message);
                 nodeEvent = new NodeEvent(node, energy.EventType, energy.Value, 0);
@@ -45,26 +45,26 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node, byte scaleType)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Meter, 
-                (byte)Command.MeterGet,
+                Command.Meter.Get,
                 scaleType
             });
         }
 
         public static ZWaveMessage GetSupported(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Meter, 
-                (byte)Command.MeterSupportedGet
+                Command.Meter.SupportedGet
             });
         }
 
         public static ZWaveMessage Reset(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Meter, 
-                (byte)Command.MeterReset
+                Command.Meter.Reset
             });
         }
     }

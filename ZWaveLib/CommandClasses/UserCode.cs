@@ -21,7 +21,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using System;
 using ZWaveLib.Values;
 using System.Collections.Generic;
 
@@ -38,7 +37,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.UserCodeReport)
+            if (cmdType == Command.UserCode.Report)
             {
                 var reportedUserCode = UserCodeValue.Parse(message);
                 var userCode = GetUserCodeData(node);
@@ -58,7 +57,7 @@ namespace ZWaveLib.CommandClasses
             userCode.UserIdStatus = newUserCode.UserIdStatus;
             List<byte> message = new List<byte>();
             message.Add((byte)CommandClass.UserCode);
-            message.Add((byte)Command.UserCodeSet);
+            message.Add(Command.UserCode.Set);
             message.Add(userCode.UserId);
             message.Add(userCode.UserIdStatus);
             message.AddRange(userCode.TagCode);

@@ -20,7 +20,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using System;
 using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
@@ -37,7 +36,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.SensorMultilevelReport)
+            if (cmdType == Command.SensorMultilevel.Report)
             {
                 var sensor = SensorValue.Parse(message);
                 if (sensor.Parameter == ZWaveSensorParameter.Unknown)
@@ -56,9 +55,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.SensorMultilevel, 
-                (byte)Command.SensorMultilevelGet 
+                Command.SensorMultilevel.Get 
             });
         }
 

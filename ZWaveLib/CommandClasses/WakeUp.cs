@@ -40,16 +40,16 @@ namespace ZWaveLib.CommandClasses
             byte cmdType = message[1];
             switch (cmdType)
             {
-            case (byte)Command.WakeUpIntervalReport:
+            case Command.WakeUp.IntervalReport:
                 if (message.Length > 4)
                 {
                     uint interval = ((uint)message[2]) << 16;
                     interval |= (((uint)message[3]) << 8);
-                    interval |= (uint)message[4];
+                    interval |= message[4];
                     nodeEvent = new NodeEvent(node, EventParameter.WakeUpInterval, interval, 0);
                 }
                 break;
-            case (byte)Command.WakeUpNotification:
+            case Command.WakeUp.Notification:
                 WakeUpNode(node);
                 nodeEvent = new NodeEvent(node, EventParameter.WakeUpNotify, 1, 0);
                 break;
@@ -59,9 +59,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.WakeUp, 
-                (byte)Command.WakeUpIntervalGet 
+                Command.WakeUp.IntervalGet 
             });
         }
 
@@ -69,7 +69,7 @@ namespace ZWaveLib.CommandClasses
         {
             return node.SendDataRequest(new byte[] { 
                 (byte)CommandClass.WakeUp, 
-                (byte)Command.WakeUpIntervalSet,
+                Command.WakeUp.IntervalSet,
                 (byte)((interval >> 16) & 0xff),
                 (byte)((interval >> 8) & 0xff),
                 (byte)((interval) & 0xff),
@@ -86,7 +86,7 @@ namespace ZWaveLib.CommandClasses
                 // 0x01, 0x09, 0x00, 0x13, 0x2b, 0x02, 0x84, 0x08, 0x25, 0xee, 0x8b
                 msg = node.SendDataRequest(new byte[] { 
                     (byte)CommandClass.WakeUp, 
-                    (byte)Command.WakeUpNoMoreInfo,
+                    Command.WakeUp.NoMoreInfo,
                     0x25
                 }).Wait();
                 wakeUpStatus.IsSleeping = true;
@@ -109,7 +109,7 @@ namespace ZWaveLib.CommandClasses
                 var wakeUpResendQueue = GetResendQueueData(node);
                 for (int m = 0; m < wakeUpResendQueue.Count; m++)
                 {
-                    Utility.logger.Trace("Sending message {0} {1}", m, BitConverter.ToString(wakeUpResendQueue[m]));
+                    Utility.Logger.Trace("Sending message {0} {1}", m, BitConverter.ToString(wakeUpResendQueue[m]));
                     node.SendMessage(wakeUpResendQueue[m]);
                 }
                 wakeUpResendQueue.Clear();
@@ -119,7 +119,7 @@ namespace ZWaveLib.CommandClasses
         public static void ResendOnWakeUp(ZWaveNode node, byte[] msg)
         {
             int minCommandLength = 8;
-            if (msg.Length >= minCommandLength && !(msg[6] == (byte)CommandClass.WakeUp && msg[7] == (byte)Command.WakeUpNoMoreInfo))
+            if (msg.Length >= minCommandLength && !(msg[6] == (byte)CommandClass.WakeUp && msg[7] == Command.WakeUp.NoMoreInfo))
             {
                 byte[] command = new byte[minCommandLength];
                 Array.Copy(msg, 0, command, 0, minCommandLength);
@@ -131,11 +131,11 @@ namespace ZWaveLib.CommandClasses
                     Array.Copy(wakeUpResendQueue[i], 0, queuedCommand, 0, minCommandLength);
                     if (queuedCommand.SequenceEqual(command))
                     {
-                        Utility.logger.Trace("Removing old message {0}", BitConverter.ToString(wakeUpResendQueue[i]));
+                        Utility.Logger.Trace("Removing old message {0}", BitConverter.ToString(wakeUpResendQueue[i]));
                         wakeUpResendQueue.RemoveAt(i);
                     }
                 }
-                Utility.logger.Trace("Adding message {0}", BitConverter.ToString(msg));
+                Utility.Logger.Trace("Adding message {0}", BitConverter.ToString(msg));
                 wakeUpResendQueue.Add(msg);
                 var wakeUpStatus = (WakeUpStatus)node.GetData("WakeUpStatus", new WakeUpStatus()).Value;
                 if (!wakeUpStatus.IsSleeping)

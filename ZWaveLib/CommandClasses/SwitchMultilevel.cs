@@ -20,8 +20,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using System;
-
 namespace ZWaveLib.CommandClasses
 {
     public class SwitchMultilevel : ICommandClass
@@ -34,29 +32,33 @@ namespace ZWaveLib.CommandClasses
         public NodeEvent GetEvent(ZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
-            byte cmdType = message[1];
-            if (cmdType == (byte)Command.SwitchMultilevelReport || cmdType == (byte)Command.SwitchMultilevelSet) // some devices use this instead of report
+            var cmdType = message[1];
+
+            // some devices use SwitchMultilevelSet instead of report
+            if (cmdType == Command.SwitchMultilevel.Report || cmdType == Command.SwitchMultilevel.Set)
             {
-                int levelValue = (int)message[2];
-                nodeEvent = new NodeEvent(node, EventParameter.SwitchMultilevel, (double)levelValue, 0);
+                var levelValue = (int) message[2];
+                nodeEvent = new NodeEvent(node, EventParameter.SwitchMultilevel, (double) levelValue, 0);
             }
             return nodeEvent;
         }
 
-        public static ZWaveMessage Set(ZWaveNode node, int value)
+        public static ZWaveMessage Set(IZWaveNode node, int value)
         {
-            return node.SendDataRequest(new byte[] { 
-                (byte)CommandClass.SwitchMultilevel, 
-                (byte)Command.SwitchMultilevelSet, 
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SwitchMultilevel,
+                Command.SwitchMultilevel.Set,
                 byte.Parse(value.ToString())
             });
         }
 
-        public static ZWaveMessage Get(ZWaveNode node)
+        public static ZWaveMessage Get(IZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
-                (byte)CommandClass.SwitchMultilevel, 
-                (byte)Command.SwitchMultilevelGet 
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SwitchMultilevel,
+                Command.SwitchMultilevel.Get
             });
         }
     }

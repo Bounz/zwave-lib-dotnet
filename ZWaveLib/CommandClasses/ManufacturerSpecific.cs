@@ -47,9 +47,9 @@ namespace ZWaveLib.CommandClasses
 
             if (message.Length > 7)
             {
-                byte[] manufacturerId = new byte[2] { message[2], message[3] };
-                byte[] typeId = new byte[2] { message[4], message[5] };
-                byte[] productId = new byte[2] { message[6], message[7] };
+                byte[] manufacturerId = { message[2], message[3] };
+                byte[] typeId = { message[4], message[5] };
+                byte[] productId = { message[6], message[7] };
 
                 var manufacturerSpecs = new ManufacturerSpecificInfo() {
                     TypeId = BitConverter.ToString(typeId).Replace("-", ""),
@@ -67,9 +67,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            byte[] request = new byte[] {
+            byte[] request = {
                 (byte)CommandClass.ManufacturerSpecific,
-                (byte)Command.ManufacturerSpecificGet
+                Command.ManufacturerSpecific.Get
             }; 
             return node.SendDataRequest(request);
         }

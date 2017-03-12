@@ -56,7 +56,7 @@ namespace ZWaveLib.Values
             }
             else
             {
-                Utility.logger.Warn("Undefined Energy Meter Scale Type {0}!", zvalue.Scale);
+                Utility.Logger.Warn("Undefined Energy Meter Scale Type {0}!", zvalue.Scale);
             }
 
 

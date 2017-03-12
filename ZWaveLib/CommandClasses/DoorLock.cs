@@ -20,8 +20,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using ZWaveLib.Values;
-
 namespace ZWaveLib.CommandClasses
 {
     public class DoorLock : ICommandClass
@@ -34,9 +32,8 @@ namespace ZWaveLib.CommandClasses
             InsideUnsecuredTimeout = 0x11,
             OutsideUnsecured = 0x20,
             OutsideUnsecuredTimeout = 0x21,
-            Secured = 0xFF}
-
-        ;
+            Secured = 0xFF
+        }
 
         public enum Alarm
         {
@@ -45,9 +42,8 @@ namespace ZWaveLib.CommandClasses
             LockedFromOutside = 0x05,
             UnlockedByUser = 0x06,
             // with id message[16] <--- TODO: find a way to route this info
-            UnatuthorizedUnlock = 0x0F}
-
-        ;
+            UnatuthorizedUnlock = 0x0F
+        }
 
         public CommandClass GetClassId()
         {
@@ -58,7 +54,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.DoorLockReport)
+            if (cmdType == Command.DoorLock.Report)
             {
                 nodeEvent = new NodeEvent(node, EventParameter.DoorLockStatus, message[2], 0);
             }
@@ -67,9 +63,10 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
-                (byte)CommandClass.DoorLock, 
-                (byte)Command.DoorLockGet
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.DoorLock,
+                Command.DoorLock.Get
             });
         }
 
@@ -81,10 +78,11 @@ namespace ZWaveLib.CommandClasses
             else
                 lockValue = 0;
 
-            return node.SendDataRequest(new byte[] { 
-                (byte)CommandClass.DoorLock, 
-                (byte)Command.DoorLockSet,
-                (byte)lockValue
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.DoorLock,
+                Command.DoorLock.Set,
+                lockValue
             });
         }
     }

@@ -56,9 +56,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage GetOperatingState(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.ThermostatOperatingState, 
-                (byte)Command.BasicGet
+                Command.Basic.Get
             });
         }
     }

@@ -37,7 +37,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (message.Length > 4 && cmdType == (byte)Command.ConfigurationReport)
+            if (message.Length > 4 && cmdType == Command.Configuration.Report)
             {
                 byte paramId = message[2];
                 byte paramLength = message[3];
@@ -55,7 +55,7 @@ namespace ZWaveLib.CommandClasses
                 //
                 byte[] bval = new byte[4];
                 // extract bytes value
-                Array.Copy(message, 4, bval, 4 - (int)paramLength, (int)paramLength);
+                Array.Copy(message, 4, bval, 4 - paramLength, paramLength);
                 uint paramValue = bval[0];
                 Array.Reverse(bval);
                 // convert it to uint
@@ -90,7 +90,7 @@ namespace ZWaveLib.CommandClasses
             //
             byte[] msg = new byte[4 + valueLength];
             msg[0] = (byte)CommandClass.Configuration;
-            msg[1] = (byte)Command.ConfigurationSet;
+            msg[1] = Command.Configuration.Set;
             msg[2] = parameter;
             msg[3] = (byte)valueLength;
             switch (valueLength)
@@ -112,7 +112,7 @@ namespace ZWaveLib.CommandClasses
         {
             return node.SendDataRequest(new byte[] { 
                 (byte)CommandClass.Configuration, 
-                (byte)Command.ConfigurationGet,
+                Command.Configuration.Get,
                 parameter
             });
         }

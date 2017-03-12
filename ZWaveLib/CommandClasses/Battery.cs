@@ -33,7 +33,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (message.Length > 0 && cmdType == (byte)Command.BatteryReport) // Battery Report
+            if (message.Length > 0 && cmdType == Command.Battery.Report) // Battery Report
             {
                 int batteryLevel = message[2];
                 nodeEvent = new NodeEvent(node, EventParameter.Battery, batteryLevel, 0);
@@ -43,11 +43,10 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Battery, 
-                (byte)Command.BatteryGet 
+                Command.Battery.Get 
             });
         }
     }
 }
-

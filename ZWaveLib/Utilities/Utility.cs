@@ -36,7 +36,7 @@ namespace ZWaveLib.Utilities
 
     public class Utility
     {
-        internal static Logger logger = LogManager.GetCurrentClassLogger();
+        internal static Logger Logger = LogManager.GetCurrentClassLogger();
                 
         //from
         //http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa
@@ -45,6 +45,7 @@ namespace ZWaveLib.Utilities
             string hex = BitConverter.ToString(ba);
             return hex.Replace("-", "");
         }
+
         //from
         //http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa
         public static byte[] HexStringToByteArray(String hex)
@@ -94,7 +95,6 @@ namespace ZWaveLib.Utilities
                     }
                     catch
                     {
-
                         System.Diagnostics.Debugger.Break();
                     }
                     k++;
@@ -136,7 +136,6 @@ namespace ZWaveLib.Utilities
             Console.WriteLine(message);
             Console.ForegroundColor = ConsoleColor.White;
         }
-
     }
 }
 

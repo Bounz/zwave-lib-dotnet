@@ -35,7 +35,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.AlarmReport)
+            if (cmdType == Command.Alarm.Report)
             {
                 var alarm = AlarmValue.Parse(message);
                 nodeEvent = new NodeEvent(node, alarm.EventType, alarm.Value, 0);

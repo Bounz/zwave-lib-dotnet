@@ -21,7 +21,6 @@
 */
 
 using System;
-using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -57,7 +56,7 @@ namespace ZWaveLib.CommandClasses
         {
             NodeEvent nodeEvent = null;
             byte cmdType = message[1];
-            if (cmdType == (byte)Command.SensorBinaryReport)
+            if (cmdType == Command.SensorBinary.Report)
             {
                 var cc = node.GetCommandClass(GetClassId());
                 int version = (cc != null ? cc.Version : 0);
@@ -121,9 +120,9 @@ namespace ZWaveLib.CommandClasses
 
         public static ZWaveMessage Get(ZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] { 
+            return node.SendDataRequest(new[] { 
                 (byte)CommandClass.SensorBinary, 
-                (byte)Command.SensorBinaryGet 
+                Command.SensorBinary.Get 
             });
         }
     }
