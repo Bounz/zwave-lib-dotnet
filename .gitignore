@@ -19,3 +19,9 @@ packages/*
 \.idea/\.idea\.ZWaveLib/\.idea/
 
 \.idea/\.idea\.ZWaveLib/
+
+coverage\.xml
+
+coverage/
+
+TestResult\.xml

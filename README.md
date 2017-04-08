@@ -1,5 +1,8 @@
 ﻿# Z-Wave Home Automation library for .NET
 
+## Build Info
+![Build status](https://ci.appveyor.com/api/projects/status/github/bounz/zwave-lib-dotnet?branch=zwavelib-tests&svg=true)
+
 ## Features
 
 - Works with most Z-Wave serial controllers
