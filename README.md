@@ -2,6 +2,7 @@
 
 ## Build Info
 ![Build status](https://ci.appveyor.com/api/projects/status/github/bounz/zwave-lib-dotnet?branch=zwavelib-tests&svg=true)
+[![codecov](https://codecov.io/gh/Bounz/zwave-lib-dotnet/branch/zwavelib-tests/graph/badge.svg)](https://codecov.io/gh/Bounz/zwave-lib-dotnet)
 
 ## Features
 
