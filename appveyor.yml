@@ -8,7 +8,7 @@ build:
   project: ZWaveLib.sln
   verbosity: minimal
 test_script:
- - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user "-filter:+[ZWaveLib]* -[*Test]*" "-target:.\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" "-targetargs: .\ZWaveLibTests\bin\Debug\ZWaveLibTests.dll" -output:"coverage.xml"
+- cmd: '.\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user "-filter:+[ZWaveLib]* -[*Test]*" "-target:.\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" "-targetargs: .\ZWaveLibTests\bin\Debug\ZWaveLibTests.dll" -output:"coverage.xml"'
 after_test:
  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
  - pip install codecov
