@@ -21,6 +21,7 @@
 *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
 */
 
+using System;
 using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 using ZWaveLib.Values;
@@ -55,26 +56,44 @@ namespace ZWaveLib.CommandClasses
             if (type == Command.Version.CommandClassReport)
             {
                 var cmdClass = (CommandClass)message[2];
-                var value = new VersionValue(cmdClass, message[3]);
+                var versionValue = new VersionValue(cmdClass, message[3]);
                 // Update node CC data
                 if (cmdClass != CommandClass.NotSet)
                 {
-                    var nodeCc = node.GetCommandClass(cmdClass);
-                    if (nodeCc != null)
-                        nodeCc.Version = value.Version;
+                    var nodeCommandClass = node.GetCommandClass(cmdClass);
+                    if (nodeCommandClass != null)
+                        nodeCommandClass.Version = versionValue.Version;
                     // Set the VersionCommandClass event
-                    nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, value, 0);
+                    nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, versionValue, 0);
                 }
                 else
                 {
-                    Utility.Logger.Warn("Command Class {0} ({1}) not supported yet", message[3], message[3].ToString("X2"));
+                    Utility.Logger.Warn("Command Class {0} ({1:X2}) not supported yet", message[3], message[3]);
                 }
             }
 
             return nodeEvent;
         }
 
-        public static ZWaveMessage Get(ZWaveNode node, CommandClass cmdClass)
+        public static ZWaveMessage Get(IZWaveNode node)
+        {
+            return node.SendDataRequest(new[] {
+                (byte)CommandClass.Version,
+                Command.Version.Get,
+            });
+        }
+
+        public static ZWaveMessage CommandClassGet(IZWaveNode node, CommandClass cmdClass)
+        {
+            return node.SendDataRequest(new[] {
+                (byte)CommandClass.Version,
+                Command.Version.CommandClassGet,
+                (byte)cmdClass
+            });
+        }
+
+        [Obsolete("Use method CommandClassGet()")]
+        public static ZWaveMessage Get(IZWaveNode node, CommandClass cmdClass)
         {
             return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Version, 
@@ -83,7 +102,8 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
-        public static ZWaveMessage Report(ZWaveNode node)
+        [Obsolete("Use method Get()")]
+        public static ZWaveMessage Report(IZWaveNode node)
         {
             return node.SendDataRequest(new[] { 
                 (byte)CommandClass.Version, 

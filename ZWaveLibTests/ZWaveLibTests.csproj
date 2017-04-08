@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AesWorksTest.cs" />
     <Compile Include="CommandClasses\SwitchMultilevelTests.cs" />
+    <Compile Include="CommandClasses\VersionTests.cs" />
     <Compile Include="CommandClasses\WakeUpTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
