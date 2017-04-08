@@ -21,8 +21,6 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
-using System;
-using System.Collections;
 using ZWaveLib.Utilities;
 
 namespace ZWaveLib.Values
@@ -35,9 +33,9 @@ namespace ZWaveLib.Values
 
         public UserCodeValue(byte userId, byte userIdStatus, byte[] tagCode)
         {
-            this.UserId = userId;
-            this.UserIdStatus = userIdStatus;
-            tagCode.CopyTo(this.TagCode, 0);
+            UserId = userId;
+            UserIdStatus = userIdStatus;
+            tagCode.CopyTo(TagCode, 0);
         }
 
         public UserCodeValue()
@@ -47,13 +45,16 @@ namespace ZWaveLib.Values
             TagCode = null;
         }
 
+        // TODO: TagCode may be 4 - 10 bytes, we should consider this
         public static UserCodeValue Parse(byte[] message)
         {
-            UserCodeValue userCode = new UserCodeValue();
-            userCode.UserId = message[2];
-            userCode.UserIdStatus = message[3];
-            userCode.TagCode = new byte[10];
-            for (int i = 0; i < 10; i++)
+            var userCode = new UserCodeValue
+            {
+                UserId = message[2],
+                UserIdStatus = message[3],
+                TagCode = new byte[10]
+            };
+            for (var i = 0; i < 10; i++)
             {
                 userCode.TagCode[i] = message[4 + i];
             }

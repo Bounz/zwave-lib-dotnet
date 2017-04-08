@@ -27,53 +27,49 @@ using ZWaveLib.Enums;
 
 namespace ZWaveLib.CommandClasses
 {
-    public class UserCode : ICommandClass
-    {
-        public CommandClass GetClassId()
-        {
-            return CommandClass.UserCode;
-        }
+   public class UserCode : ICommandClass
+   {
+       public CommandClass GetClassId()
+       {
+           return CommandClass.UserCode;
+       }
 
-        public NodeEvent GetEvent(IZWaveNode node, byte[] message)
-        {
-            NodeEvent nodeEvent = null;
-            byte cmdType = message[1];
-            if (cmdType == Command.UserCode.Report)
-            {
-                var reportedUserCode = UserCodeValue.Parse(message);
-                var userCode = GetUserCodeData(node);
-                userCode.TagCode = reportedUserCode.TagCode;
-                userCode.UserId = reportedUserCode.UserId;
-                userCode.UserIdStatus = reportedUserCode.UserIdStatus;
-                nodeEvent = new NodeEvent(node, EventParameter.UserCode, reportedUserCode, 0);
-            }
-            return nodeEvent;
-        }
+       public NodeEvent GetEvent(IZWaveNode node, byte[] message)
+       {
+           NodeEvent nodeEvent = null;
+           var cmdType = message[1];
+           if (cmdType == Command.UserCode.Report)
+           {
+               var reportedUserCode = UserCodeValue.Parse(message);
+               var userCode = GetUserCodeData(node);
+               userCode.TagCode = reportedUserCode.TagCode;
+               userCode.UserId = reportedUserCode.UserId;
+               userCode.UserIdStatus = reportedUserCode.UserIdStatus;
+               nodeEvent = new NodeEvent(node, EventParameter.UserCode, reportedUserCode, 0);
+           }
+           return nodeEvent;
+       }
 
-        public static ZWaveMessage Set(ZWaveNode node, UserCodeValue newUserCode)
-        {
-            var userCode = GetUserCodeData(node);
-            userCode.TagCode = newUserCode.TagCode;
-            userCode.UserId = newUserCode.UserId;
-            userCode.UserIdStatus = newUserCode.UserIdStatus;
-            List<byte> message = new List<byte>();
-            message.Add((byte)CommandClass.UserCode);
-            message.Add(Command.UserCode.Set);
-            message.Add(userCode.UserId);
-            message.Add(userCode.UserIdStatus);
-            message.AddRange(userCode.TagCode);
-            return node.SendDataRequest(message.ToArray());
-        }
+       public static ZWaveMessage Set(IZWaveNode node, UserCodeValue newUserCode)
+       {
+           var userCode = GetUserCodeData(node);
+           userCode.TagCode = newUserCode.TagCode;
+           userCode.UserId = newUserCode.UserId;
+           userCode.UserIdStatus = newUserCode.UserIdStatus;
+           var message = new List<byte> {(byte) CommandClass.UserCode, Command.UserCode.Set, userCode.UserId, userCode.UserIdStatus};
+           message.AddRange(userCode.TagCode);
+           return node.SendDataRequest(message.ToArray());
+       }
 
-        public static UserCodeValue GetUserCode(ZWaveNode node)
-        {
-            return GetUserCodeData(node);
-        }
+       public static UserCodeValue GetUserCode(IZWaveNode node)
+       {
+           return GetUserCodeData(node);
+       }
 
-        private static UserCodeValue GetUserCodeData(IZWaveNode node)
-        {
-            return (UserCodeValue)node.GetData("UserCode", new UserCodeValue()).Value;
-        }
+       private static UserCodeValue GetUserCodeData(IZWaveNode node)
+       {
+           return (UserCodeValue)node.GetData("UserCode", new UserCodeValue()).Value;
+       }
 
-    }
+   }
 }
