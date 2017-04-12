@@ -4,6 +4,9 @@
 ![Build status](https://ci.appveyor.com/api/projects/status/github/bounz/zwave-lib-dotnet?branch=zwavelib-tests&svg=true)
 [![codecov](https://codecov.io/gh/Bounz/zwave-lib-dotnet/branch/zwavelib-tests/graph/badge.svg)](https://codecov.io/gh/Bounz/zwave-lib-dotnet)
 
+## Breaking changes in ver XXX
+- EventParameter.ThermostatSetPoint is returned with value of type SetpointValue, istead of dynamic object
+
 ## Features
 
 - Works with most Z-Wave serial controllers

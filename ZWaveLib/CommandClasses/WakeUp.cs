@@ -24,6 +24,11 @@ using ZWaveLib.Enums;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Wake Up Command Class allows a battery-powered device to notify another device (always
+    /// listening), that it is awake and ready to receive any queued commands.
+    /// </summary>
+    /// <remarks>SDS12652 3.54 Wake Up Command Class, version 1</remarks>
     public class WakeUp : ICommandClass
     {
         public CommandClass GetClassId()
@@ -57,7 +62,13 @@ namespace ZWaveLib.CommandClasses
             return nodeEvent;
         }
 
-        // SDS12652 3.54.2 Wake Up Interval Get Command
+        // 
+        /// <summary>
+        /// The Wake Up Interval Get Command is used to request the wake up interval of a device.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.54.2 Wake Up Interval Get Command</remarks>
         public static ZWaveMessage Get(IZWaveNode node)
         {
             return node.SendDataRequest(new[] { 
@@ -67,6 +78,14 @@ namespace ZWaveLib.CommandClasses
         }
 
         // SDS12652 3.54.1 Wake Up Interval Set Command
+        /// <summary>
+        /// The Wake Up Interval Set Command is used to configure the wake up interval of a device and the
+        /// NodeID of the device receiving the Wake Up Notification Command.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.54.1 Wake Up Interval Set Command</remarks>
         public static ZWaveMessage Set(IZWaveNode node, uint interval)
         {
             return node.SendDataRequest(new byte[] { 
@@ -80,6 +99,13 @@ namespace ZWaveLib.CommandClasses
         }
 
         // SDS12652 3.54.5 Wake Up No More Information Command
+        /// <summary>
+        /// The Wake Up No More Information Command is used to notify the sender of a Wake Up Notification
+        /// Command that it MAY return to sleep to minimize power consumption.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.54.5 Wake Up No More Information Command</remarks>
         public static ZWaveMessage SendToSleep(IZWaveNode node)
         {
             ZWaveMessage msg = null;
@@ -130,4 +156,3 @@ namespace ZWaveLib.CommandClasses
         }
     }
 }
-

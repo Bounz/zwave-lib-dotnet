@@ -13,7 +13,8 @@ namespace ZWaveLibTests.CommandClasses
         /* 
          * Information about the constants is taken from
          * "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification" page 111
-         * User Code command class          */
+         * User Code command class commands
+         */
 
         private const byte CommandClassUserCode = 0x63;     // COMMAND_CLASS_VERSION
         private const byte UserCodeVersion = 0x01;          // USER_CODE_VERSION

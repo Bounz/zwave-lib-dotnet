@@ -12,7 +12,8 @@ namespace ZWaveLibTests.CommandClasses
         /* 
          * Information about the constants is taken from
          * "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification" page 112
-         * Wake Up command class commands          */
+         * Wake Up command class commands commands
+         */
 
         private const byte CommandClassWakeUp = 0x84;       // COMMAND_CLASS_WAKE_UP
         private const byte WakeUpIntervalGet = 0x05;        // WAKE_UP_INTERVAL_GET

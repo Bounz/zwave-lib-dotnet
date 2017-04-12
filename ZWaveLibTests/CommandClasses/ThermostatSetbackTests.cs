@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using NUnit.Framework;
 using ZWaveLib;
 using ZWaveLib.CommandClasses;
@@ -10,8 +11,8 @@ namespace ZWaveLibTests.CommandClasses
     {
         /*
          * Information about the constants is taken from
-         * "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification"
-         * page 107, Thermostat Setback command class commands
+         * "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification" page 107
+         * Thermostat Setback command class commands
          */
 
         private const byte CommandClassThermostatSetback = 0x47;   // COMMAND_CLASS_THERMOSTAT_SETBACK
@@ -48,7 +49,7 @@ namespace ZWaveLibTests.CommandClasses
         {
             var node = new Mock<IZWaveNode>();
 
-            Assert.That(() => ThermostatSetBack.Set(node.Object), Throws.Exception);
+            Assert.That(() => ThermostatSetBack.Set(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
 
         }
 
@@ -57,7 +58,7 @@ namespace ZWaveLibTests.CommandClasses
         {
             var node = new Mock<IZWaveNode>();
 
-            Assert.That(() => ThermostatSetBack.Set(node.Object), Throws.Exception);
+            Assert.That(() => ThermostatSetBack.Set(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
         }
     }
 }

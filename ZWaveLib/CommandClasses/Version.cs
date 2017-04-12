@@ -28,6 +28,12 @@ using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Version Command Class may be used to obtain the Z-Wave library type, the Z-Wave protocol
+    /// version used by the application, the individual command class versions used by the application and the
+    /// vendor specific application version from a Z-Wave enabled device.
+    /// </summary>
+    /// <remarks>SDS12652 3.52 Version Command Class, version 1</remarks>
     public class Version : ICommandClass
     {
         public CommandClass GetClassId()
@@ -35,6 +41,8 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.Version;
         }
 
+        // SDS12652 3.52.4 Version Report Command
+        // SDS12652 3.52.6 Version Command Class Report Command
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
@@ -75,6 +83,13 @@ namespace ZWaveLib.CommandClasses
             return nodeEvent;
         }
 
+        /// <summary>
+        /// The Version Get Command is used to request the library type, protocol version and application version
+        /// from a device that supports the Version Command Class.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.52.3 Version Get Command</remarks>
         public static ZWaveMessage Get(IZWaveNode node)
         {
             return node.SendDataRequest(new[] {
@@ -83,6 +98,14 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
+        /// <summary>
+        /// The Version Command Class Get Command is used to request the individual command class versions
+        /// from a device.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="cmdClass"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.52.5 Version Command Class Get Command</remarks>
         public static ZWaveMessage CommandClassGet(IZWaveNode node, CommandClass cmdClass)
         {
             return node.SendDataRequest(new[] {

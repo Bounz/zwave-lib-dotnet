@@ -27,9 +27,11 @@ namespace ZWaveLib.Values
 {
     public class ZWaveValue
     {
-        private static byte sizeMask = 0x07, 
-            scaleMask = 0x18, scaleShift = 0x03, 
-            precisionMask = 0xe0, precisionShift = 0x05;
+        private const byte SizeMask = 0x07;
+        private const byte ScaleMask = 0x18;
+        private const byte ScaleShift = 0x03;
+        private const byte PrecisionMask = 0xe0;
+        private const byte PrecisionShift = 0x05;
 
         public double Value;
         public int Scale;
@@ -40,24 +42,31 @@ namespace ZWaveLib.Values
         {
         }
 
-        public ZWaveValue(double v, int precision, int scale, int size)
+        public ZWaveValue(double value, int precision, int scale, int size)
         {
-            this.Value = v;
-            this.Precision = precision;
-            this.Scale = scale;
-            this.Size = size;
+            Value = value;
+            Precision = precision;
+            Scale = scale;
+            Size = size;
         }
 
-        public static byte GetPrecisionScaleSize(int precision, int scale, int size)
+        public ZWaveValue(ZWaveValue zWaveValue)
         {
-            return (byte)((precision << precisionShift) | (scale << scaleShift) | size);
+            Value = zWaveValue.Value;
+            Precision = zWaveValue.Precision;
+            Scale = zWaveValue.Scale;
+            Size = zWaveValue.Size;
         }
 
-        public static byte[] GetValueBytes(double v, int precision, int scale, int size)
+        private static byte GetPrecisionScaleSize(int precision, int scale, int size)
         {
-            List<byte> valueBytes = new List<byte>();
-            valueBytes.Add(GetPrecisionScaleSize(precision, scale, size));
-            int intValue = (int)(v * Math.Pow(10D, precision));
+            return (byte)((precision << PrecisionShift) | (scale << ScaleShift) | size);
+        }
+
+        public static byte[] GetValueBytes(double value, int precision, int scale, int size)
+        {
+            var valueBytes = new List<byte> {GetPrecisionScaleSize(precision, scale, size)};
+            int intValue = (int)(value * Math.Pow(10, precision));
             int shift = (size - 1) << 3;
             for (int i = size; i > 0; --i, shift -= 8)
             {
@@ -70,12 +79,12 @@ namespace ZWaveLib.Values
         // https://github.com/dcuddeback/open-zwave/blob/master/cpp/src/command_classes/CommandClass.cpp#L289
         public static ZWaveValue ExtractValueFromBytes(byte[] message, int valueOffset)
         {
-            ZWaveValue result = new ZWaveValue();
+            var result = new ZWaveValue();
             try
             {
-                byte size = (byte)(message[valueOffset - 1] & sizeMask);
-                byte precision = (byte)((message[valueOffset - 1] & precisionMask) >> precisionShift);
-                int scale = (int)((message[valueOffset - 1] & scaleMask) >> scaleShift);
+                byte size = (byte)(message[valueOffset - 1] & SizeMask);
+                byte precision = (byte)((message[valueOffset - 1] & PrecisionMask) >> PrecisionShift);
+                int scale = (int)((message[valueOffset - 1] & ScaleMask) >> ScaleShift);
                 //
                 result.Size = size;
                 result.Precision = precision;
@@ -113,4 +122,3 @@ namespace ZWaveLib.Values
 
     }
 }
-
