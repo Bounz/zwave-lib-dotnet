@@ -146,6 +146,12 @@ namespace ZWaveLib.Enums
 
         internal class Thermostat
         {
+            public const byte ModeSet = 0x01;
+            public const byte ModeGet = 0x02;
+            public const byte ModeReport = 0x03;
+            public const byte ModeSupportedGet = 0x04;
+            public const byte ModeSupportedReport = 0x05;
+
             public const byte OperatingStateGet = 0x02;
             public const byte OperatingStateReport = 0x03;
             public const byte OperatingStateLoggingSupportedGet = 0x01;

@@ -13,7 +13,6 @@ namespace ZWaveLibTests.CommandClasses
     [TestFixture]
     public class ThermostatSetpointTests
     {
-
         /* 
          * Information about the constants is taken from
          * "Sigma Designs, SDS13740, Software Design Specification, Z-Wave Device and Command Class Types and Defines Specification" page 107-110
