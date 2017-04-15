@@ -20,12 +20,19 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using System;
 using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Thermostat Operating State Command Class is used to obtain the operating state of the thermostat.
+    /// </summary>
+    /// <remarks>SDS12652 3.41 Thermostat Operating State Command Class, version 1</remarks>
     public class ThermostatOperatingState : ICommandClass
     {
+        [Obsolete("Use OperatingState enum")]
         public enum Value
         {
             Idle = 0x00,
@@ -46,22 +53,98 @@ namespace ZWaveLib.CommandClasses
             State15 = 0x0F
         }
 
+        public enum OperatingState
+        {
+            Idle = 0x00,
+            Heating = 0x01,
+            Cooling = 0x02,
+            FanOnly = 0x03,
+            PendingHeat = 0x04,
+            PendingCool = 0x05,
+            VentEconomizer = 0x06,
+            AuxHeating = 0x07,
+            SecondStageHeating = 0x08,
+            SecondStageCooling = 0x09,
+            SecondStageAuxHeat = 0x0A,
+            ThirdStageAuxHeatg = 0x0B
+        }
+
         public CommandClass GetClassId()
         {
             return CommandClass.ThermostatOperatingState;
         }
 
+        // SDS12652 3.41.2 Thermostat Operating State Report Command
+        // SDS12652 3.42.2 Thermostat Operating State Report Command V2
+        // SDS12652 3.42.4 Thermostat Operating State Logging Supported Report - not implemented yet
+        // SDS12652 3.42.6 Thermostat Operating State Logging Report - not implemented yet
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            return new NodeEvent(node, EventParameter.ThermostatOperatingState, (Value)message[2], 0);
+            NodeEvent nodeEvent = null;
+            var cmdType = message[1];
+            switch (cmdType)
+            {
+                case Command.Thermostat.OperatingStateReport:
+                    var value = (OperatingState) message[2];
+                    nodeEvent = new NodeEvent(node, EventParameter.ThermostatOperatingState, value, 0);
+                    break;
+
+                case Command.Thermostat.OperatingLoggingSupportedReport:
+                case Command.Thermostat.OperatingStateLoggingReport:
+                    break;
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
+            }
+
+            return nodeEvent;
         }
 
-        public static ZWaveMessage GetOperatingState(ZWaveNode node)
+        /// <summary>
+        /// The Thermostat Operating State Get Command is used to request the operating state.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.41.1 Thermostat Operating State Get Command</remarks>
+        public static ZWaveMessage Get(IZWaveNode node)
         {
             return node.SendDataRequest(new[] { 
                 (byte)CommandClass.ThermostatOperatingState, 
                 Command.Basic.Get
             });
+        }
+
+        [Obsolete("Use Get(IZWaveNode node) method instead")]
+        public static ZWaveMessage GetOperatingState(IZWaveNode node)
+        {
+            return node.SendDataRequest(new[] {
+                (byte)CommandClass.ThermostatOperatingState,
+                Command.Basic.Get
+            });
+        }
+
+        /// <summary>
+        /// The Thermostat Operating State Logging Supported Get Command is used to request the operating
+        /// state logging supported by the device.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.42.3 Thermostat Operating State Logging Supported Get</remarks>
+        public static ZWaveMessage LoggingSupportedGet(IZWaveNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The Thermostat Operating State Logging Get Command is used to request the operating state logging
+        /// supported by the device.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12652 3.42.5 Thermostat Operating State Logging Get</remarks>
+        public static ZWaveMessage LoggingGet(IZWaveNode node)
+        {
+            throw new NotImplementedException();
         }
     }
 }

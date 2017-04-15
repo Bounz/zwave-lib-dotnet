@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
@@ -107,7 +108,7 @@ namespace ZWaveLib.CommandClasses
                     break;
 
                 default:
-                    throw new Exception(string.Format("Unknown command: {0}", cmdType));
+                    throw new UnsupportedCommandException(cmdType);
             }
 
             return nodeEvent;
@@ -150,7 +151,7 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
-        [Obsolete("Use Get(ZWaveNode node, SetpointType ptype) method instead")]
+        [Obsolete("Use Get(IZWaveNode node, SetpointType ptype) method instead")]
         public static ZWaveMessage Get(IZWaveNode node, Value ptype)
         {
             return node.SendDataRequest(new[] {
@@ -160,7 +161,7 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
-        [Obsolete("Use Set(ZWaveNode node, SetpointType ptype, double temperature) method instead.")]
+        [Obsolete("Use Set(IZWaveNode node, SetpointType ptype, double temperature) method instead.")]
         public static ZWaveMessage Set(IZWaveNode node, Value ptype, double temperature)
         {
             var message = new List<byte>();

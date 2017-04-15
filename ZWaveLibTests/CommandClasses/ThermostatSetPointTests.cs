@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using ZWaveLib;
 using ZWaveLib.CommandClasses;
+using ZWaveLib.Utilities;
 using ZWaveLib.Values;
 
 namespace ZWaveLibTests.CommandClasses
@@ -68,6 +69,15 @@ namespace ZWaveLibTests.CommandClasses
             var nodeEvent = commandClass.GetEvent(new ZWaveNode(), message);
 
             Assert.That(nodeEvent, Is.Null);
+        }
+
+        [Test]
+        public void GetEvent_ThrowsExceptionFor_UnknownCommand()
+        {
+            var commandClass = new ThermostatSetPoint();
+            var message = new byte[] { CommandClassThermostatSetpoint, 0xEE };
+
+            Assert.That(() => commandClass.GetEvent(new ZWaveNode(), message), Throws.Exception.TypeOf<UnsupportedCommandException>());
         }
 
         [Test]
