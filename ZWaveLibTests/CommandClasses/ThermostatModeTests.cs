@@ -154,5 +154,17 @@ namespace ZWaveLibTests.CommandClasses
 
             Assert.That(() => ThermostatMode.SupportedGet(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
         }
+
+        [Test]
+        [Obsolete]
+        public void ObsoleteSetMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+
+            ThermostatMode.Set(node.Object, ThermostatMode.Value.Heat);
+
+            var expectedMessage = new byte[] { CommandClassThermostatMode, ThermostatModeSet, 0x01 };
+            node.Verify(x => x.SendDataRequest(It.Is<byte[]>(msg => msg.SequenceEqual(expectedMessage))));
+        }
     }
 }

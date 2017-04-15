@@ -110,7 +110,7 @@ namespace ZWaveLib.CommandClasses
         {
             return node.SendDataRequest(new[] { 
                 (byte)CommandClass.ThermostatOperatingState, 
-                Command.Basic.Get
+                Command.Thermostat.OperatingStateGet
             });
         }
 

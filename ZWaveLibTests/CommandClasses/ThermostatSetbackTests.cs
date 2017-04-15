@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using ZWaveLib;
 using ZWaveLib.CommandClasses;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLibTests.CommandClasses
 {
@@ -45,6 +46,15 @@ namespace ZWaveLibTests.CommandClasses
         }
 
         [Test]
+        public void GetEvent_ThrowsExceptionFor_UnknownCommand()
+        {
+            var commandClass = new ThermostatSetBack();
+            var message = new byte[] { CommandClassThermostatSetback, 0xEE };
+
+            Assert.That(() => commandClass.GetEvent(new ZWaveNode(), message), Throws.Exception.TypeOf<UnsupportedCommandException>());
+        }
+
+        [Test]
         public void SetMessage()
         {
             var node = new Mock<IZWaveNode>();
@@ -58,7 +68,7 @@ namespace ZWaveLibTests.CommandClasses
         {
             var node = new Mock<IZWaveNode>();
 
-            Assert.That(() => ThermostatSetBack.Set(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
+            Assert.That(() => ThermostatSetBack.Get(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
         }
     }
 }

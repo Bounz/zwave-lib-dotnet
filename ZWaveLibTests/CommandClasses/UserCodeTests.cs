@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using ZWaveLib;
@@ -103,6 +104,14 @@ namespace ZWaveLibTests.CommandClasses
             var actualUserCode = UserCode.GetUserCode(node.Object);
 
             Assert.That(actualUserCode, Is.EqualTo(userCode));
+        }
+
+        [Test]
+        public void UsersNumberGetMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+
+            Assert.That(() => UserCode.UsersNumberGet(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
         }
     }
 }

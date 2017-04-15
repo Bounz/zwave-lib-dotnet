@@ -46,38 +46,44 @@ namespace ZWaveLib.CommandClasses
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             NodeEvent nodeEvent = null;
-            var type = message[1];
+            var cmdType = message[1];
 
-            if (type == Command.Version.Report)
+            switch (cmdType)
             {
-                var nodeVersion = new NodeVersion {
-                    LibraryType = message[2],
-                    ProtocolVersion = message[3],
-                    ProtocolSubVersion = message[4],
-                    ApplicationVersion = message[5],
-                    ApplicationSubVersion = message[6]
-                };
-                node.Version = nodeVersion;
-                nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, nodeVersion, 0);
-            }
+                case Command.Version.Report:
+                    var nodeVersion = new NodeVersion
+                    {
+                        LibraryType = message[2],
+                        ProtocolVersion = message[3],
+                        ProtocolSubVersion = message[4],
+                        ApplicationVersion = message[5],
+                        ApplicationSubVersion = message[6]
+                    };
+                    node.Version = nodeVersion;
+                    nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, nodeVersion, 0);
+                    break;
 
-            if (type == Command.Version.CommandClassReport)
-            {
-                var cmdClass = (CommandClass)message[2];
-                var versionValue = new VersionValue(cmdClass, message[3]);
-                // Update node CC data
-                if (cmdClass != CommandClass.NotSet)
-                {
-                    var nodeCommandClass = node.GetCommandClass(cmdClass);
-                    if (nodeCommandClass != null)
-                        nodeCommandClass.Version = versionValue.Version;
-                    // Set the VersionCommandClass event
-                    nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, versionValue, 0);
-                }
-                else
-                {
-                    Utility.Logger.Warn("Command Class {0} ({1:X2}) not supported yet", message[3], message[3]);
-                }
+                case Command.Version.CommandClassReport:
+                
+                    var cmdClass = (CommandClass)message[2];
+                    var versionValue = new VersionValue(cmdClass, message[3]);
+                    // Update node CC data
+                    if (cmdClass != CommandClass.NotSet)
+                    {
+                        var nodeCommandClass = node.GetCommandClass(cmdClass);
+                        if (nodeCommandClass != null)
+                            nodeCommandClass.Version = versionValue.Version;
+                        // Set the VersionCommandClass event
+                        nodeEvent = new NodeEvent(node, EventParameter.VersionCommandClass, versionValue, 0);
+                    }
+                    else
+                    {
+                        Utility.Logger.Warn("Command Class {0} ({1:X2}) not supported yet", message[3], message[3]);
+                    }
+                    break;
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
 
             return nodeEvent;

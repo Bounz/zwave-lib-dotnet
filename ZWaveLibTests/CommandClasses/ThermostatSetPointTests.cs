@@ -113,5 +113,34 @@ namespace ZWaveLibTests.CommandClasses
             
             Assert.That(() => ThermostatSetPoint.SupportedGet(node.Object), Throws.Exception.TypeOf<NotImplementedException>());
         }
+
+        [Test]
+        [Obsolete]
+        public void ObsoleteSetMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+            node.Setup(x => x.GetData("SetPoint", It.IsAny<object>()))
+                .Returns(new NodeData("SetPoint", new ZWaveValue(5, Precision, Scale, Size)));
+
+            ThermostatSetPoint.Set(node.Object, ThermostatSetPoint.Value.Heating, 10.25);
+
+            var valueBytes = ZWaveValue.GetValueBytes(Tempreture, Precision, Scale, Size);
+            var expectedMessage = new List<byte> { CommandClassThermostatSetpoint, ThermostatSetpointSet, 0x01 };
+            expectedMessage.AddRange(valueBytes);
+
+            node.Verify(x => x.SendDataRequest(It.Is<byte[]>(msg => msg.SequenceEqual(expectedMessage))));
+        }
+
+        [Test]
+        [Obsolete]
+        public void ObsoleteGetMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+
+            ThermostatSetPoint.Get(node.Object, ThermostatSetPoint.Value.Heating);
+
+            var expectedMessage = new byte[] { CommandClassThermostatSetpoint, ThermostatSetpointGet, 0x01 };
+            node.Verify(x => x.SendDataRequest(It.Is<byte[]>(msg => msg.SequenceEqual(expectedMessage))));
+        }
     }
 }

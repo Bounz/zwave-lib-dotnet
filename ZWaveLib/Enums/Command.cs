@@ -159,6 +159,10 @@ namespace ZWaveLib.Enums
             public const byte OperatingStateLoggingGet = 0x05;
             public const byte OperatingStateLoggingReport = 0x06;
 
+            public const byte SetbackGet = 0x02;
+            public const byte SetbackReport = 0x03;
+            public const byte SetbackSet = 0x01;            
+
             public const byte SetPointSet = 0x01;
             public const byte SetPointGet = 0x02;
             public const byte SetPointReport = 0x03;

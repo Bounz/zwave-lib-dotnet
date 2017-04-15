@@ -21,6 +21,8 @@
  */
 
 using System;
+using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses
 {
@@ -39,7 +41,20 @@ namespace ZWaveLib.CommandClasses
         // SDS12652 3.43.3 Thermostat Setback Report Command
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            return new NodeEvent(node, EventParameter.ThermostatSetBack, message[2], 0);
+            NodeEvent nodeEvent;
+            var cmdType = message[1];
+            switch (cmdType)
+            {
+                case Command.Thermostat.SetbackReport:
+                    var value = message[2];
+                    nodeEvent = new NodeEvent(node, EventParameter.ThermostatSetBack, value, 0);
+                    break;
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
+            }
+
+            return nodeEvent;
         }
 
         /// <summary>

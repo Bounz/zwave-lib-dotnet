@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using ZWaveLib;
-using ZWaveLib.CommandClasses;
+using ZWaveLib.Utilities;
 using ZWaveLib.Values;
+using Version = ZWaveLib.CommandClasses.Version;
 
 namespace ZWaveLibTests.CommandClasses
 {
@@ -70,6 +72,15 @@ namespace ZWaveLibTests.CommandClasses
         }
 
         [Test]
+        public void GetEvent_ThrowsExceptionFor_UnknownCommand()
+        {
+            var commandClass = new Version();
+            var message = new byte[] { CommandClassVersion, 0xEE };
+
+            Assert.That(() => commandClass.GetEvent(new ZWaveNode(), message), Throws.Exception.TypeOf<UnsupportedCommandException>());
+        }
+
+        [Test]
         public void GetMessage()
         {
             var node = new Mock<IZWaveNode>();
@@ -86,6 +97,30 @@ namespace ZWaveLibTests.CommandClasses
             var node = new Mock<IZWaveNode>();
 
             Version.Get(node.Object);
+
+            var expectedMessage = new[] { CommandClassVersion, VersionGet };
+            node.Verify(x => x.SendDataRequest(It.Is<byte[]>(msg => msg.SequenceEqual(expectedMessage))));
+        }
+
+        [Test]
+        [Obsolete]
+        public void ObsoleteGetMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+
+            Version.Get(node.Object, CommandClass.Version);
+
+            var expectedMessage = new[] { CommandClassVersion, VersionCommandClassGet, CommandClassVersion };
+            node.Verify(x => x.SendDataRequest(It.Is<byte[]>(msg => msg.SequenceEqual(expectedMessage))));
+        }
+
+        [Test]
+        [Obsolete]
+        public void ObsoleteReportMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+
+            Version.Report(node.Object);
 
             var expectedMessage = new[] { CommandClassVersion, VersionGet };
             node.Verify(x => x.SendDataRequest(It.Is<byte[]>(msg => msg.SequenceEqual(expectedMessage))));

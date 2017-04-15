@@ -142,7 +142,7 @@ namespace ZWaveLib.CommandClasses
         }
 
         [Obsolete("Use Set(IZWaveNode node, Mode mode) method instead")]
-        public static ZWaveMessage Set(ZWaveNode node, Value mode)
+        public static ZWaveMessage Set(IZWaveNode node, Value mode)
         {
             return node.SendDataRequest(new[] { 
                 (byte)CommandClass.ThermostatMode, 
