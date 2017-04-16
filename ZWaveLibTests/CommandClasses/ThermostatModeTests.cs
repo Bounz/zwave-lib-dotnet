@@ -17,7 +17,7 @@ namespace ZWaveLibTests.CommandClasses
          * Thermostat Mode command class commands
          */
 
-        private const byte CommandClassThermostatMode = 0x40; // COMMAND_CLASS_THERMOSTAT_OPERATING_STATE
+        private const byte CommandClassThermostatMode = 0x40; // COMMAND_CLASS_THERMOSTAT_MODE
 
         /* Thermostat Mode command class commands */
         private const byte ThermostatModeVersion = 0x01;

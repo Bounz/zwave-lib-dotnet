@@ -146,6 +146,15 @@ namespace ZWaveLib.Enums
 
         internal class Thermostat
         {
+            public const byte FanModeGet = 0x02;
+            public const byte FanModeReport = 0x03;
+            public const byte FanModeSet = 0x01;
+            public const byte FanModeSupportedGet = 0x04;
+            public const byte FanModeSupportedReport = 0x05;
+
+            public const byte FanStateGet = 0x02;
+            public const byte FanStateReport = 0x03;
+
             public const byte ModeSet = 0x01;
             public const byte ModeGet = 0x02;
             public const byte ModeReport = 0x03;

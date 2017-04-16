@@ -22,6 +22,10 @@
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>SDS12652 </remarks>
     public class ThermostatHeating : ICommandClass
     {
         public CommandClass GetClassId()
@@ -29,6 +33,7 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.ThermostatHeating;
         }
 
+        // SDS12652 
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
             return new NodeEvent(node, EventParameter.ThermostatHeating, message[2], 0);

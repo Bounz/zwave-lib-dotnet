@@ -50,6 +50,9 @@
   <ItemGroup>
     <Compile Include="AesWorksTest.cs" />
     <Compile Include="CommandClasses\SwitchMultilevelTests.cs" />
+    <Compile Include="CommandClasses\ThermostatFanStateTests.cs" />
+    <Compile Include="CommandClasses\ThermostatFanModeTests.cs" />
+    <Compile Include="CommandClasses\ThermostatHeatingTests.cs" />
     <Compile Include="CommandClasses\ThermostatModeTests.cs" />
     <Compile Include="CommandClasses\ThermostatOperatingStateTests.cs" />
     <Compile Include="CommandClasses\ThermostatSetpointTests.cs" />
