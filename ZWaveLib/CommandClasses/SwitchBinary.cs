@@ -20,10 +20,17 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using System;
 using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Binary Switch Command Class is used to control devices with On/Off or Enable/Disable capability
+    /// </summary>
+    /// <remarks>SDS12657 4.25 Binary Switch Command Class, version 1</remarks>
+    /// <remarks>SDS12657 4.26 Binary Switch Command Class, version 2</remarks>
     public class SwitchBinary : ICommandClass
     {
         public CommandClass GetClassId()
@@ -31,34 +38,64 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.SwitchBinary;
         }
 
+        // SDS12657 4.25.3 Binary Switch Report Command
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            NodeEvent nodeEvent = null;
-            byte cmdType = message[1];
-            if (cmdType == Command.SwitchBinary.Report || cmdType == Command.SwitchBinary.Set) // some devices use this instead of report
+            NodeEvent nodeEvent;
+            var cmdType = message[1];
+            switch (cmdType)
             {
-                int levelValue = message[2];
-                nodeEvent = new NodeEvent(node, EventParameter.SwitchBinary, (double)levelValue, 0);
+                case Command.SwitchBinary.Report:
+                case Command.SwitchBinary.Set: // some devices use this instead of report
+                    var value = (double) message[2];
+                    nodeEvent = new NodeEvent(node, EventParameter.SwitchBinary, value, 0);
+                    break;
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
+
             return nodeEvent;
         }
 
-        public static ZWaveMessage Set(ZWaveNode node, int value)
+        /// <summary>
+        /// The Binary Switch Set command, version 1 is used to set a binary value.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12657 4.25.1 Binary Switch Set Command</remarks>
+        public static ZWaveMessage Set(IZWaveNode node, int value)
         {
-            return node.SendDataRequest(new[] { 
-                (byte)CommandClass.SwitchBinary, 
-                Command.SwitchBinary.Set, 
+            if (!IsValidBinarySetValue(value))
+                throw new ArgumentOutOfRangeException(nameof(value));
+
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SwitchBinary,
+                Command.SwitchBinary.Set,
                 byte.Parse(value.ToString())
             });
         }
 
-        public static ZWaveMessage Get(ZWaveNode node)
+        /// <summary>
+        /// The Binary Switch Get command, version 1 is used to request the status of a device with On/Off or Enable/Disable capability.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS12657 4.25.2 Binary Switch Get Command</remarks>
+        public static ZWaveMessage Get(IZWaveNode node)
         {
-            return node.SendDataRequest(new[] { 
-                (byte)CommandClass.SwitchBinary, 
-                Command.SwitchBinary.Get 
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SwitchBinary,
+                Command.SwitchBinary.Get
             });
+        }
+
+        private static bool IsValidBinarySetValue(int value)
+        {
+            return value == 255 || (value >= 0 && value <= 99);
         }
     }
 }
-
