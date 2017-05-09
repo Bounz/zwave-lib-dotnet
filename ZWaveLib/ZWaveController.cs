@@ -1168,7 +1168,7 @@ namespace ZWaveLib
         {
             if (currentStage != QueryStage.Complete && currentStage != QueryStage.NotSet && currentStage != QueryStage.Error)
             {
-                //Utility.logger.Trace("Query Stage {0} Type {1} Function {2}={3} Node {4}={5} Callback {6}={7}", currentStage, zm.Type, zm.Function, currentMessage.Function, zm.NodeId, currentMessage.NodeId, zm.CallbackId, currentMessage.CallbackId);
+                //Utility.Logger.Trace("Query Stage {0} Type {1} Function {2}={3} Node {4}={5} Callback {6}={7}", currentStage, zm.Type, zm.Function, currentMessage.Function, zm.NodeId, currentMessage.NodeId, zm.CallbackId, currentMessage.CallbackId);
                 switch (currentStage)
                 {
                 case QueryStage.WaitAck:

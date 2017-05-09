@@ -41,7 +41,7 @@ namespace ZWaveLib.Utilities
         {
             if (nc == null)
             {
-                Utility.DebugLog(DebugMessageType.Error, "The used key has not been generated.");
+                Utility.Logger.Error("The used key has not been generated.");
                 return zeroIV;
             }
 

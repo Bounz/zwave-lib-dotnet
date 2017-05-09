@@ -47,7 +47,7 @@ namespace ZWaveLib.Values
         {
             ZWaveValue zvalue = ZWaveValue.ExtractValueFromBytes(message, 4);
             //int meterType = (message[1] & 0x1f);
-            //Utility.logger.Warn("METER TYPE ({0})!", meterType);
+            //Utility.Logger.Warn("METER TYPE ({0})!", meterType);
             EnergyValue energy = new EnergyValue();
             energy.Value = zvalue.Value;
             if (Enum.IsDefined(typeof(ZWaveEnergyScaleType), zvalue.Scale))

@@ -63,7 +63,7 @@ namespace ZWaveLib.Utilities
                 rnd.NextBytes(_controllerCurrentNonce);
             }
 
-            Utility.DebugLog(DebugMessageType.Information, "ControllerCurrentNonce: " + BitConverter.ToString(localControllerCurrentNonce));
+            Utility.Logger.Info("ControllerCurrentNonce: " + BitConverter.ToString(localControllerCurrentNonce));
             //return localControllerCurrentNonce;
         }
 
@@ -74,7 +74,7 @@ namespace ZWaveLib.Utilities
             // safety check - don't try to copy if the source array is null
             if (_controllerCurrentNonce == null)
             {
-                Utility.DebugLog(DebugMessageType.Error, "Controller Current Nonce is NULL");
+                Utility.Logger.Error("Controller Current Nonce is NULL");
                 return _controllerCurrentNonce;
             }
 
@@ -112,7 +112,7 @@ namespace ZWaveLib.Utilities
                 if (IsAddingNode && !IsNetworkKeySet)
                 {
                     networkKey = initialNetworkKey;
-                    Utility.DebugLog(DebugMessageType.Information, "In SetupNetworkKey  - in node inclusion mode.");
+                    Utility.Logger.Info("In SetupNetworkKey  - in node inclusion mode.");
                 }
                 else
                 {
@@ -124,9 +124,9 @@ namespace ZWaveLib.Utilities
                 _encryptionKey = AesWork.EncryptEcbMessage(networkKey, encryptPassword);
                 AuthorizationKey = AesWork.EncryptEcbMessage(networkKey, authPassword);
 
-                Utility.DebugLog(DebugMessageType.Information, "      networkKey: " + BitConverter.ToString(networkKey));
-                Utility.DebugLog(DebugMessageType.Information, "   encryptionKey: " + BitConverter.ToString(_encryptionKey));
-                Utility.DebugLog(DebugMessageType.Information, "AuthorizationKey: " + BitConverter.ToString(AuthorizationKey));
+                Utility.Logger.Info("      networkKey: " + BitConverter.ToString(networkKey));
+                Utility.Logger.Info("   encryptionKey: " + BitConverter.ToString(_encryptionKey));
+                Utility.Logger.Info("AuthorizationKey: " + BitConverter.ToString(AuthorizationKey));
 
                 return _encryptionKey;
             }

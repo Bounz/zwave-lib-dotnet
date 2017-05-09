@@ -26,14 +26,6 @@ using NLog;
 
 namespace ZWaveLib.Utilities
 {
-
-    public enum DebugMessageType
-    {
-        Information,
-        Warning,
-        Error
-    }
-
     public class Utility
     {
         internal static Logger Logger = LogManager.GetCurrentClassLogger();
@@ -120,22 +112,5 @@ namespace ZWaveLib.Utilities
             }
             return routingInfo.ToArray();
         }
-
-        public static void DebugLog(DebugMessageType dtype, string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            if (dtype == DebugMessageType.Warning)
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-            }
-            else if (dtype == DebugMessageType.Error)
-            {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-            }
-            //Console.Write("[" + DateTime.Now.ToString("HH:mm:ss.ffffff") + "] ");
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
     }
 }
-

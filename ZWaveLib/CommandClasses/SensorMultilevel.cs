@@ -51,7 +51,7 @@ namespace ZWaveLib.CommandClasses
                     {
                         var sensorType = message[2];
                         nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, sensor.Value, 0);
-                        Utility.DebugLog(DebugMessageType.Warning, "Unhandled sensor parameter type: " + sensorType);
+                        Utility.Logger.Warn("Unhandled sensor parameter type: " + sensorType);
                     }
                     else
                     {
