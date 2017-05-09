@@ -20,12 +20,15 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using System;
+
 namespace ZWaveLib.CommandClasses
 {
     /// <summary>
     /// 
     /// </summary>
     /// <remarks>SDS12652 </remarks>
+    [Obsolete("Looks like this Command class no longer exists, as it is absent in official documentation SDS13548")]
     public class ThermostatHeating : ICommandClass
     {
         public CommandClass GetClassId()

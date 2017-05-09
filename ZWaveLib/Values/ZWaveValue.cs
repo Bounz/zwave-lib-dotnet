@@ -82,21 +82,22 @@ namespace ZWaveLib.Values
             var result = new ZWaveValue();
             try
             {
-                byte size = (byte)(message[valueOffset - 1] & SizeMask);
-                byte precision = (byte)((message[valueOffset - 1] & PrecisionMask) >> PrecisionShift);
-                int scale = (int)((message[valueOffset - 1] & ScaleMask) >> ScaleShift);
-                //
+                var size = (byte)(message[valueOffset - 1] & SizeMask);
+                var precision = (byte)((message[valueOffset - 1] & PrecisionMask) >> PrecisionShift);
+                var scale = (int)((message[valueOffset - 1] & ScaleMask) >> ScaleShift);
+                
                 result.Size = size;
                 result.Precision = precision;
                 result.Scale = scale;
-                //
-                int value = 0;
+                
+                var value = 0;
                 byte i;
                 for (i = 0; i < size; ++i)
                 {
                     value <<= 8;
                     value |= (int)message[i + (int)valueOffset];
                 }
+
                 // Deal with sign extension. All values are signed
                 if ((message[valueOffset] & 0x80) > 0)
                 {
@@ -110,7 +111,7 @@ namespace ZWaveLib.Values
                         value = (int)((uint)value | 0xffff0000);
                     }
                 }
-                //
+                
                 result.Value = ((double)value / (precision == 0 ? 1 : Math.Pow(10D, precision)));
             }
             catch

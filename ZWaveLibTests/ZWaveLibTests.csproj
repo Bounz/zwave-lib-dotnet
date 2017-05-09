@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AesWorksTest.cs" />
+    <Compile Include="CommandClasses\SensorMultilevelTests.cs" />
     <Compile Include="CommandClasses\SwitchBinaryTests.cs" />
     <Compile Include="CommandClasses\SwitchMultilevelTests.cs" />
     <Compile Include="CommandClasses\ThermostatFanStateTests.cs" />
@@ -61,7 +62,8 @@
     <Compile Include="CommandClasses\UserCodeTests.cs" />
     <Compile Include="CommandClasses\VersionTests.cs" />
     <Compile Include="CommandClasses\WakeUpTests.cs" />
-    <Compile Include="CommandClasses\ZWaveValueTests.cs" />
+    <Compile Include="Values\SensorValueTests.cs" />
+    <Compile Include="Values\ZWaveValueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

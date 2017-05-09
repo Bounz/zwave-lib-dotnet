@@ -17,7 +17,7 @@ namespace ZWaveLibTests.CommandClasses
          * Switch Binary command class commands
          */
 
-        private const byte CommandClassSwitchBinary = 0x25; // COMMAND_CLASS_SWITCH_MULTILEVEL
+        private const byte CommandClassSwitchBinary = 0x25; // COMMAND_CLASS_SWITCH_BINARY
 
         /* Switch Binary command class commands */
         private const byte SwitchBinaryVersionV2 = 0x02; // SWITCH_BINARY_VERSION_V2

@@ -26,6 +26,10 @@ using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Multilevel Sensor Command Class is used to control a multilevel sensor.
+    /// </summary>
+    /// <remarks>SDS13781 4.59 Multilevel Sensor Command Class, version 1-4</remarks>
     public class SensorMultilevel : ICommandClass
     {
         public CommandClass GetClassId()
@@ -33,28 +37,43 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.SensorMultilevel;
         }
 
+        // SDS13781 4.59.2 Multilevel Sensor Report Command
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            NodeEvent nodeEvent = null;
-            byte cmdType = message[1];
-            if (cmdType == Command.SensorMultilevel.Report)
+            NodeEvent nodeEvent;
+            var cmdType = message[1];
+            switch (cmdType)
             {
-                var sensor = SensorValue.Parse(message);
-                if (sensor.Parameter == ZWaveSensorParameter.Unknown)
+                case Command.SensorMultilevel.Report:
                 {
-                    byte key = message[2];
-                    nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, sensor.Value, 0);
-                    Utility.DebugLog(DebugMessageType.Warning, "Unhandled sensor parameter type: " + key);
+                    var sensor = SensorValue.Parse(message);
+                    if (sensor.Parameter == ZWaveSensorType.Unknown)
+                    {
+                        var sensorType = message[2];
+                        nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, sensor.Value, 0);
+                        Utility.DebugLog(DebugMessageType.Warning, "Unhandled sensor parameter type: " + sensorType);
+                    }
+                    else
+                    {
+                        nodeEvent = new NodeEvent(node, sensor.EventType, sensor.Value, 0);
+                    }
+                    break;
                 }
-                else
-                {
-                    nodeEvent = new NodeEvent(node, sensor.EventType, sensor.Value, 0);
-                }
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
+
             return nodeEvent;
         }
 
-        public static ZWaveMessage Get(ZWaveNode node)
+        /// <summary>
+        /// This command is used to request the level of a multilevel sensor.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS13781 4.59.1 Multilevel Sensor Get Command</remarks>
+        public static ZWaveMessage Get(IZWaveNode node)
         {
             return node.SendDataRequest(new[] { 
                 (byte)CommandClass.SensorMultilevel, 

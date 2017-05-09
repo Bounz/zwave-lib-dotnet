@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using ZWaveLib.Values;
 
-namespace ZWaveLibTests.CommandClasses
+namespace ZWaveLibTests.Values
 {
     [TestFixture]
     public class ZWaveValueTests
@@ -12,11 +12,19 @@ namespace ZWaveLibTests.CommandClasses
         private const double Value = 10.25; // 1025 = 0x0401
 
         [Test]
-        public void GetValueBytes()
+        public void GetValueBytes_Celsius()
         {
             var valueBytes = ZWaveValue.GetValueBytes(Value, Precision, Scale, Size);
 
             Assert.That(valueBytes, Is.EqualTo(new byte[] { 0x42, 0x04, 0x01 }));
+        }
+
+        [Test]
+        public void GetValueBytes_Fahrenheit()
+        {
+            var valueBytes = ZWaveValue.GetValueBytes(50, Precision, 1, Size);
+
+            Assert.That(valueBytes, Is.EqualTo(new byte[] { 0x4A, 0x13, 0x88 }));
         }
 
         [Test]
