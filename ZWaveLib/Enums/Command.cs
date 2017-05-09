@@ -68,6 +68,8 @@ namespace ZWaveLib.Enums
         {
             public const byte Get = 0x02;
             public const byte Report = 0x03;
+            public const byte SupportedGet = 0x01;
+            public const byte SupportedReport = 0x04;
         }
 
         internal class SensorMultilevel

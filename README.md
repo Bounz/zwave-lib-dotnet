@@ -7,6 +7,7 @@
 ## Breaking changes in ver XXX
 - EventParameter.ThermostatSetPoint is returned with value of type SetpointValue, istead of dynamic object
 - SensorValue now uses ZWaveSensorType enum instead of ZWaveSensorParameter
+- SensorValue now uses ZWaveSensorBinaryType enum instead of ZWaveSensorBinaryParameter
 
 ## Features
 

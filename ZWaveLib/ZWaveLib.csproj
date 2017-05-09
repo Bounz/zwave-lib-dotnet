@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="CommandClasses\DoorLock.cs" />
     <Compile Include="CommandClasses\Security.cs" />
+    <Compile Include="Enums\ZWaveSensorBinaryType.cs" />
     <Compile Include="Enums\ZWaveSensorType.cs" />
     <Compile Include="ICommandClass.cs" />
     <Compile Include="IZWaveNode.cs" />

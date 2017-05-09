@@ -22,30 +22,14 @@
 
 using System;
 using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses
 {
-    /// <summary>
-    /// Enumerator for possible sensor binary parameters (only reported for v2)
+    /// <summary> 
+    /// The Binary Sensor Command Class is used to realize binary sensors, such as movement sensors and door/window sensors.
     /// </summary>
-    public enum ZWaveSensorBinaryParameter : byte
-    {
-        Unknown = 0x00,
-        General = 0x01,
-        Smoke = 0x02,
-        CarbonMonoxide = 0x03,
-        CarbonDioxide = 0x04,
-        Heat = 0x05,
-        Water = 0x06,
-        Freeze = 0x07,
-        Tamper = 0x08,
-        Auxiliary = 0x09,
-        DoorWindow = 0x0a,
-        Tilt = 0x0b,
-        Motion = 0x0c,
-        GlassBreak = 0x0d
-    }
-
+    /// <remarks>SDS13781 4.14 Binary Sensor Command Class, version 2 [DEPRECATED]</remarks>
     public class SensorBinary : ICommandClass
     {
         public CommandClass GetClassId()
@@ -53,77 +37,114 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.SensorBinary;
         }
 
+        // SDS13781 4.14.2 Binary Sensor Report Command
+        // SDS13781 4.14.4 Binary Sensor Supported Sensor Report Command
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            NodeEvent nodeEvent = null;
-            byte cmdType = message[1];
-            if (cmdType == Command.SensorBinary.Report)
+            NodeEvent nodeEvent;
+            var cmdType = message[1];
+            switch (cmdType)
             {
-                var cc = node.GetCommandClass(GetClassId());
-                int version = (cc != null ? cc.Version : 0);
-
-                if (version == 1 || message.Length <= 3)
+                case Command.SensorBinary.Report:
                 {
-                    nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, message[2], 0);
-                }
-                else
-                {
-                    byte tmp = message[3];
-                    ZWaveSensorBinaryParameter sensorType = ZWaveSensorBinaryParameter.General;
-                    EventParameter eventType;
+                    var cc = node.GetCommandClass(GetClassId());
+                    var version = (cc != null ? cc.Version : 0);
+                    var value = message[2];
 
-                    if (Enum.IsDefined(typeof(ZWaveSensorBinaryParameter), tmp))
+                    if (version == 1 || message.Length <= 3)
                     {
-                        sensorType = (ZWaveSensorBinaryParameter)tmp;
+                        nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, value, 0);
                     }
-
-                    switch (sensorType)
+                    else
                     {
-                    case ZWaveSensorBinaryParameter.Smoke:
-                        eventType = EventParameter.AlarmSmoke;
-                        break;
-                    case ZWaveSensorBinaryParameter.CarbonMonoxide:
-                        eventType = EventParameter.AlarmCarbonMonoxide;
-                        break;
-                    case ZWaveSensorBinaryParameter.CarbonDioxide:
-                        eventType = EventParameter.AlarmCarbonDioxide;
-                        break;
-                    case ZWaveSensorBinaryParameter.Heat:
-                        eventType = EventParameter.AlarmHeat;
-                        break;
-                    case ZWaveSensorBinaryParameter.Water:
-                        eventType = EventParameter.AlarmFlood;
-                        break;
-                    case ZWaveSensorBinaryParameter.Tamper:
-                        eventType = EventParameter.AlarmTampered;
-                        break;
-                    case ZWaveSensorBinaryParameter.DoorWindow:
-                        eventType = EventParameter.AlarmDoorWindow;
-                        break;
-                    case ZWaveSensorBinaryParameter.Motion:
-                        eventType = EventParameter.SensorMotion;
-                        break;
-                    case ZWaveSensorBinaryParameter.Freeze:
-                    case ZWaveSensorBinaryParameter.Auxiliary:
-                    case ZWaveSensorBinaryParameter.Tilt:
-                    case ZWaveSensorBinaryParameter.General:
-                    default:
-                        // Catch-all for the undefined types above.
-                        eventType = EventParameter.SensorGeneric;
-                        break;
-                    }
+                        byte tmp = message[3];
+                        var sensorType = ZWaveSensorBinaryType.General;
+                        EventParameter eventType;
 
-                    nodeEvent = new NodeEvent(node, eventType, message[2], 0);
+                        if (Enum.IsDefined(typeof(ZWaveSensorBinaryType), tmp))
+                        {
+                            sensorType = (ZWaveSensorBinaryType)tmp;
+                        }
+
+                        switch (sensorType)
+                        {
+                            case ZWaveSensorBinaryType.Smoke:
+                                eventType = EventParameter.AlarmSmoke;
+                                break;
+                            case ZWaveSensorBinaryType.CarbonMonoxide:
+                                eventType = EventParameter.AlarmCarbonMonoxide;
+                                break;
+                            case ZWaveSensorBinaryType.CarbonDioxide:
+                                eventType = EventParameter.AlarmCarbonDioxide;
+                                break;
+                            case ZWaveSensorBinaryType.Heat:
+                                eventType = EventParameter.AlarmHeat;
+                                break;
+                            case ZWaveSensorBinaryType.Water:
+                                eventType = EventParameter.AlarmFlood;
+                                break;
+                            case ZWaveSensorBinaryType.Tamper:
+                                eventType = EventParameter.AlarmTampered;
+                                break;
+                            case ZWaveSensorBinaryType.DoorWindow:
+                                eventType = EventParameter.AlarmDoorWindow;
+                                break;
+                            case ZWaveSensorBinaryType.Motion:
+                                eventType = EventParameter.SensorMotion;
+                                break;
+                            case ZWaveSensorBinaryType.Freeze:
+                            case ZWaveSensorBinaryType.Auxiliary:
+                            case ZWaveSensorBinaryType.Tilt:
+                            case ZWaveSensorBinaryType.General:
+                            case ZWaveSensorBinaryType.GlassBreak:
+                            default:
+                                // Catch-all for the undefined types above.
+                                eventType = EventParameter.SensorGeneric;
+                                break;
+                        }
+
+                        nodeEvent = new NodeEvent(node, eventType, value, 0);
+                    }
+                    break;
                 }
+
+                case Command.SensorBinary.SupportedReport:
+                    throw new NotImplementedException();
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
+
             return nodeEvent;
         }
 
-        public static ZWaveMessage Get(ZWaveNode node)
+        /// <summary>
+        /// This command is used to request the status of the specific sensor device.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS13781 4.14.1 Binary Sensor Get Command</remarks>
+        public static ZWaveMessage Get(IZWaveNode node)
         {
-            return node.SendDataRequest(new[] { 
-                (byte)CommandClass.SensorBinary, 
-                Command.SensorBinary.Get 
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SensorBinary,
+                Command.SensorBinary.Get
+            });
+        }
+
+        /// <summary>
+        /// This command is used to request the supported sensor types from the binary sensor device.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS13781 4.14.3 Binary Sensor Get Supported Sensor Command</remarks>
+        public static ZWaveMessage SupportedGet(IZWaveNode node)
+        {
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SensorBinary,
+                Command.SensorBinary.SupportedGet
             });
         }
     }
