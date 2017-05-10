@@ -46,14 +46,15 @@ namespace ZWaveLib.Values
     /// Enumerator for alarm value details. e.g., 0x16 corresponds with the action of 
     /// an open door if the alarm AccessControl alarm type is set.
     /// </summary>
-    /// 
     public enum ZWaveAlarmEvent
     {
         Generic = 0x00,
+
         // Home security
         HomeSecurityTamper = 0x03,
         HomeSecurityMotion = 0x07, // Air?
         HomeSecurityPir = 0x08,
+
         // Access control
         AccessDoorOpen = 0x16,
         AccessDoorClosed = 0x17,
@@ -68,12 +69,12 @@ namespace ZWaveLib.Values
 
         public static AlarmValue Parse(byte[] message)
         {
-            AlarmValue alarm = new AlarmValue();
-            byte cmdClass = message[0];
+            var alarm = new AlarmValue();
+            var cmdClass = message[0];
 
-            if (cmdClass == (byte)CommandClass.SensorAlarm)
+            if (cmdClass == (byte) CommandClass.SensorAlarm)
             {
-                alarm.Parameter = (ZWaveAlarmType)Enum.Parse(typeof(ZWaveAlarmType), message[3].ToString());
+                alarm.Parameter = (ZWaveAlarmType) Enum.Parse(typeof(ZWaveAlarmType), message[3].ToString());
                 alarm.Value = message[4];
             }
             else // CommandClass.Alarm
@@ -82,60 +83,66 @@ namespace ZWaveLib.Values
                 if (message.Length > 7)
                 {
                     // Version 2
-                    alarm.Event = (ZWaveAlarmEvent)Enum.Parse(typeof(ZWaveAlarmEvent), message[7].ToString());
-                    alarm.Parameter = (ZWaveAlarmType)Enum.Parse(typeof(ZWaveAlarmType), message[6].ToString());
+                    alarm.Event = (ZWaveAlarmEvent) Enum.Parse(typeof(ZWaveAlarmEvent), message[7].ToString());
+                    alarm.Parameter = (ZWaveAlarmType) Enum.Parse(typeof(ZWaveAlarmType), message[6].ToString());
                     alarm.Value = message[5];
                 }
                 else
                 {
                     // Version 1
-                    alarm.Parameter = (ZWaveAlarmType)Enum.Parse(typeof(ZWaveAlarmType), message[2].ToString());
+                    alarm.Parameter = (ZWaveAlarmType) Enum.Parse(typeof(ZWaveAlarmType), message[2].ToString());
                     alarm.Value = message[3];
                 }
             }
 
             switch (alarm.Parameter)
             {
-            case ZWaveAlarmType.CarbonDioxide:
-                alarm.EventType = EventParameter.AlarmCarbonDioxide;
-                break;
-            case ZWaveAlarmType.CarbonMonoxide:
-                alarm.EventType = EventParameter.AlarmCarbonMonoxide;
-                break;
-            case ZWaveAlarmType.Smoke:
-                alarm.EventType = EventParameter.AlarmSmoke;
-                break;
-            case ZWaveAlarmType.Heat:
-                alarm.EventType = EventParameter.AlarmHeat;
-                break;
-            case ZWaveAlarmType.Flood:
-                alarm.EventType = EventParameter.AlarmFlood;
-                break;
-            case ZWaveAlarmType.AccessControl:
-                alarm.EventType = EventParameter.AlarmDoorWindow;
-                switch (alarm.Event)
-                {
-                case ZWaveAlarmEvent.AccessDoorOpen:
-                    alarm.Value = 1;
+                case ZWaveAlarmType.CarbonDioxide:
+                    alarm.EventType = EventParameter.AlarmCarbonDioxide;
                     break;
-                case ZWaveAlarmEvent.AccessDoorClosed:
-                    alarm.Value = 0;
+
+                case ZWaveAlarmType.CarbonMonoxide:
+                    alarm.EventType = EventParameter.AlarmCarbonMonoxide;
                     break;
-                }
-                break;
-            case ZWaveAlarmType.Burglar:
-                alarm.EventType = EventParameter.AlarmGeneric;
-                switch (alarm.Event)
-                {
-                case ZWaveAlarmEvent.HomeSecurityTamper:
-                    alarm.EventType = EventParameter.AlarmTampered;
+
+                case ZWaveAlarmType.Smoke:
+                    alarm.EventType = EventParameter.AlarmSmoke;
                     break;
-                case ZWaveAlarmEvent.HomeSecurityMotion:
-                case ZWaveAlarmEvent.HomeSecurityPir:
-                    alarm.EventType = EventParameter.SensorMotion;
+
+                case ZWaveAlarmType.Heat:
+                    alarm.EventType = EventParameter.AlarmHeat;
                     break;
-                }
-                break;
+
+                case ZWaveAlarmType.Flood:
+                    alarm.EventType = EventParameter.AlarmFlood;
+                    break;
+
+                case ZWaveAlarmType.AccessControl:
+                    alarm.EventType = EventParameter.AlarmDoorWindow;
+                    switch (alarm.Event)
+                    {
+                        case ZWaveAlarmEvent.AccessDoorOpen:
+                            alarm.Value = 1;
+                            break;
+                        case ZWaveAlarmEvent.AccessDoorClosed:
+                            alarm.Value = 0;
+                            break;
+                    }
+                    break;
+
+                case ZWaveAlarmType.Burglar:
+                    alarm.EventType = EventParameter.AlarmGeneric;
+                    switch (alarm.Event)
+                    {
+                        case ZWaveAlarmEvent.HomeSecurityTamper:
+                            alarm.EventType = EventParameter.AlarmTampered;
+                            break;
+                        case ZWaveAlarmEvent.HomeSecurityMotion:
+                        case ZWaveAlarmEvent.HomeSecurityPir:
+                            alarm.EventType = EventParameter.SensorMotion;
+                            break;
+                    }
+                    break;
             }
 
             return alarm;
