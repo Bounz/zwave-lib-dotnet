@@ -21,9 +21,18 @@
  */
 
 using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
+using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Scene Activation Command Class used for the actual scene launching in a number of devices e.g. a
+    /// another scene-controlling unit, in a multilevel switch, in a binary switch etc. This command class requires
+    /// an initial configuration of the scenes to be launched by the Scene Actuator Configuration Set or Scene
+    /// Controller Configuration Set Command depending on device used.
+    /// </summary>
+    /// <remarks>SDS13781 4.75 Scene Activation Command Class, version 1</remarks>
     public class SceneActivation : ICommandClass
     {
         public CommandClass GetClassId()
@@ -31,15 +40,28 @@ namespace ZWaveLib.CommandClasses
             return CommandClass.SceneActivation;
         }
 
+        // SDS13781 4.75.1 Scene Activation Set Command
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            NodeEvent nodeEvent = null;
-            byte cmdType = message[1];
-            if (cmdType == Command.Scene.ActivationSet)
+            NodeEvent nodeEvent;
+            var cmdType = message[1];
+            switch (cmdType)
             {
-                nodeEvent = new NodeEvent(node, EventParameter.SensorGeneric, (double)message[2], 0);
+                case Command.Scene.ActivationSet:
+                {
+                    var sceneActivationValue = SceneActivationValue.Parse(message);
+                    nodeEvent = new NodeEvent(node, EventParameter.SceneActivation, sceneActivationValue, 0);
+                    break;
+                }
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
+
             return nodeEvent;
         }
+
+        // TODO: I suppose we should implement Send method to be able to initiate SceneActivation
+        // Also we need to implement sending multicast messages in ZWave network
     }
 }

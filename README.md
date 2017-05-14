@@ -8,6 +8,7 @@
 - EventParameter.ThermostatSetPoint is returned with value of type SetpointValue, istead of dynamic object
 - SensorValue now uses ZWaveSensorType enum instead of ZWaveSensorParameter
 - SensorValue now uses ZWaveSensorBinaryType enum instead of ZWaveSensorBinaryParameter
+- SceneActivation command class handler now returns EventParameter.SceneActivation with value of type SceneActivationValue instead of EventParameter.SensorGeneric
 
 ## Features
 

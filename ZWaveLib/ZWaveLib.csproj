@@ -61,6 +61,7 @@
     <Compile Include="Utilities\SecurityData.cs" />
     <Compile Include="Utilities\SecutiryPayload.cs" />
     <Compile Include="Utilities\UnsupportedCommandException.cs" />
+    <Compile Include="Values\SceneActivationValue.cs" />
     <Compile Include="Values\SetpointValue.cs" />
     <Compile Include="ZWaveMessage.cs" />
     <Compile Include="ZWaveNode.cs" />
