@@ -79,7 +79,16 @@ namespace ZWaveLib
         DoorLockStatus,
         RoutingInfo,
         Clock,
-        SceneActivation
+        SceneActivation,
+        IrrigationSystemInfoReport,
+        IrrigationSystemConfigReport,
+        IrrigationSystemStatusReport,
+        IrrigationValveInfoReport,
+        IrrigationValveConfigReport,
+        IrrigationValveTableReport,
+
+        WaterFlow,
+        WaterPressure
     }
 
 }

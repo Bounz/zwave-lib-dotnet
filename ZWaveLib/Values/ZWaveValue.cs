@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ZWaveLib.Values
 {
@@ -73,6 +74,40 @@ namespace ZWaveLib.Values
                 valueBytes.Add((byte)(intValue >> shift));
             }
             return valueBytes.ToArray();
+        }
+
+        /// <summary>
+        /// Get bytes representation of Z-Wave Value used in multilevel sensors.
+        /// Tries to guess the size and precision based on passed value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="scale"></param>
+        /// <returns>PrecisionScaleSize byte and value bytes</returns>
+        public static byte[] GetValueBytes(double value, byte scale)
+        {
+            // determine desired precision
+            var stringValue = value.ToString(CultureInfo.InvariantCulture);
+            var precision = stringValue.Substring(stringValue.IndexOf(CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator, StringComparison.InvariantCulture) + 1).Length;
+            if(precision > 7) // we have only 3 bits to store precision
+                throw new ArgumentOutOfRangeException();
+
+            // determine desired size
+            // handle cases when size is more than 4 bytes
+            var doubleValue = value * Math.Pow(10D, precision);
+            if (doubleValue > int.MaxValue)
+                throw new ArgumentOutOfRangeException();
+
+            var size = 4;
+            if (doubleValue <= short.MaxValue)
+                size = 2;
+            if (doubleValue <= byte.MaxValue)
+                size = 1;
+
+            var pss = GetPrecisionScaleSize(precision, scale, size);
+            var valueBytes = GetValueBytes(value, precision, scale, size);
+            var msg = new List<byte>(pss);
+            msg.AddRange(valueBytes);
+            return msg.ToArray();
         }
 
         // adapted from:

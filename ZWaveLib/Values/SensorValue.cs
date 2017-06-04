@@ -49,7 +49,10 @@ namespace ZWaveLib.Values
         AirFlow = 18,
         TankCapacity = 19,
         Distance = 20,
-        AnglePosition = 21
+        AnglePosition = 21,
+
+        WaterFlow = 56, // 0x38
+        WaterPressure = 57 // 0x39
     }
 
     public enum ZWaveTemperatureScaleType
@@ -113,14 +116,25 @@ namespace ZWaveLib.Values
                     sensorValue.EventType = EventParameter.MeterPower;
                     break;
 
+                case ZWaveSensorType.WaterFlow:
+                    sensorValue.Value = zvalue.Value;
+                    sensorValue.EventType = EventParameter.WaterFlow;
+                    break;
+
+                case ZWaveSensorType.WaterPressure:
+                    sensorValue.Value = zvalue.Value;
+                    sensorValue.EventType = EventParameter.WaterPressure;
+                    break;
+
                 // TODO: implement other Sensor Types
 
                 default:
                     sensorValue.Value = zvalue.Value;
                     break;
             }
-            
+
             return sensorValue;
+            
         }
 
         public static double FahrenheitToCelsius(double temperature)

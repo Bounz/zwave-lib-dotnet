@@ -209,5 +209,27 @@ namespace ZWaveLib.Enums
             public const byte Set = 0x04;
             public const byte Report = 0x06;
         }
+
+        internal class Irrigation
+        {
+            public const byte SystemInfoGet = 0x01; // IRRIGATION_SYSTEM_INFO_GET
+            public const byte SystemInfoReport = 0x02; // IRRIGATION_SYSTEM_INFO_REPORT
+            public const byte SystemStatusGet = 0x03; // IRRIGATION_SYSTEM_STATUS_GET
+            public const byte SystemStatusReport = 0x04; // IRRIGATION_SYSTEM_STATUS_REPORT
+            public const byte SystemConfigSet = 0x05; // IRRIGATION_SYSTEM_CONFIG_SET
+            public const byte SystemConfigGet = 0x06; // IRRIGATION_SYSTEM_CONFIG_GET
+            public const byte SystemConfigReport = 0x07; // IRRIGATION_SYSTEM_CONFIG_REPORT
+            public const byte ValveInfoGet = 0x08; // IRRIGATION_VALVE_INFO_GET
+            public const byte ValveInfoReport = 0x09; // IRRIGATION_VALVE_INFO_REPORT
+            public const byte ValveConfigSet = 0x0A; // IRRIGATION_VALVE_CONFIG_SET
+            public const byte ValveConfigGet = 0x0B; // IRRIGATION_VALVE_CONFIG_GET
+            public const byte ValveRun = 0x0D; // IRRIGATION_VALVE_RUN
+            public const byte ValveConfigReport = 0x0C; // IRRIGATION_VALVE_CONFIG_REPORT
+            public const byte ValveTableSet = 0x0E; // IRRIGATION_VALVE_TABLE_SET
+            public const byte ValveTableGet = 0x0F; // IRRIGATION_VALVE_TABLE_GET
+            public const byte ValveTableReport = 0x10; // IRRIGATION_VALVE_TABLE_REPORT
+            public const byte ValveTableRun = 0x11; // IRRIGATION_VALVE_TABLE_RUN
+            public const byte SystemShutoff = 0x12; // IRRIGATION_SYSTEM_SHUTOFF
+        }
     }
 }
