@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AesWorksTest.cs" />
+    <Compile Include="CommandClasses\IrrigationTests.cs" />
     <Compile Include="CommandClasses\SceneActivationTests.cs" />
     <Compile Include="CommandClasses\SensorAlarmTests.cs" />
     <Compile Include="CommandClasses\SensorBinaryTests.cs" />

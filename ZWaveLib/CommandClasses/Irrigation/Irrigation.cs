@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ZWaveLib.Enums;
+using ZWaveLib.Utilities;
 
 namespace ZWaveLib.CommandClasses.Irrigation
 {
@@ -56,6 +57,9 @@ namespace ZWaveLib.CommandClasses.Irrigation
                     var valveTable = IrrigationValveTable.Parse(message);
                     nodeEvent = new NodeEvent(node, EventParameter.IrrigationValveTableReport, valveTable, 0);
                     break;
+
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
             return nodeEvent;
         }
@@ -118,7 +122,7 @@ namespace ZWaveLib.CommandClasses.Irrigation
             return node.SendDataRequest(new[]
             {
                 (byte) CommandClass.Irrigation,
-                Command.Irrigation.SystemStatusGet
+                Command.Irrigation.SystemConfigGet
             });
         }
 
@@ -149,23 +153,15 @@ namespace ZWaveLib.CommandClasses.Irrigation
         /// This command allows an irrigation valve to be configured accordingly.
         /// </summary>
         /// <param name="node"></param>
-        /// <param name="valveId"></param>
         /// <param name="config"></param>
-        /// <param name="useMasterValve"></param>
         /// <returns></returns>
         /// <remarks>SDS13781 4.42.13 Irrigation Valve Config Set Command</remarks>
-        public static ZWaveMessage ValveConfigSet(IZWaveNode node, byte valveId, IrrigationValveConfig config, bool useMasterValve = false)
+        public static ZWaveMessage ValveConfigSet(IZWaveNode node, IrrigationValveConfig config)
         {
-            var masterValveByte = Convert.ToByte(useMasterValve);
-            if (useMasterValve)
-                valveId = 1;
-
             var commandBytes = new List<byte>
             {
                 (byte) CommandClass.Irrigation,
-                Command.Irrigation.ValveConfigSet,
-                masterValveByte,
-                valveId
+                Command.Irrigation.ValveConfigSet
             };
             commandBytes.AddRange(config.ToByteArray());
 
