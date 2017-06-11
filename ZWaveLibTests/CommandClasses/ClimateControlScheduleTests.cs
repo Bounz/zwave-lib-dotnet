@@ -151,6 +151,10 @@ namespace ZWaveLibTests.CommandClasses
             schedule.Switchpoints[4].Minute = 15;
             schedule.Switchpoints[4].State = ScheduleStateValue.Parse(127);
 
+            schedule.Switchpoints[5].Hour = 6;
+            schedule.Switchpoints[5].Minute = 15;
+            schedule.Switchpoints[5].State = ScheduleStateValue.Parse(126);
+
             ClimateControlSchedule.Set(node.Object, schedule);
 
             var expectedMessage = new byte[]
@@ -162,7 +166,7 @@ namespace ZWaveLibTests.CommandClasses
                 5, 45, 0x79,
                 6, 0, 0x7A,
                 6, 15, 0x7F,
-                0x00, 0x00, 0x7F,
+                6, 15, 0x7E,
                 0x00, 0x00, 0x7F,
                 0x00, 0x00, 0x7F,
                 0x00, 0x00, 0x7F
@@ -259,6 +263,44 @@ namespace ZWaveLibTests.CommandClasses
 
             var expectedMessage = new[] { CommandClassClimateControlSchedule, ScheduleOverrideGet };
             node.Verify(x => x.SendDataRequest(It.Is<byte[]>(bytes => bytes.SequenceEqual(expectedMessage))));
+        }
+
+        [Test]
+        public void ClimateControlScheduleValue_ToString()
+        {
+            var schedule = new ClimateControlScheduleValue { Weekday = Weekday.Monday };
+            schedule.Switchpoints[0].Hour = 5;
+            schedule.Switchpoints[0].Minute = 15;
+            schedule.Switchpoints[0].State = ScheduleStateValue.Parse(20);
+
+            var stringValue = schedule.ToString();
+
+            var expectedMessage = "[ClimateControlScheduleValue: Weekday=Monday, Switchpoints: [" +
+                                  "\r\n   Switchpoint: 0 [SwitchpointValue: Hour=5, Minute=15, State=[ScheduleStateValue: Setback=20, FrostProtectionMode=False, EnergySavingMode=False, Unused=False]]" +
+                                  "\r\n   Switchpoint: 1 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 2 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 3 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 4 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 5 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 6 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 7 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]" +
+                                  "\r\n   Switchpoint: 8 [SwitchpointValue: Hour=0, Minute=0, State=[ScheduleStateValue: Setback=, FrostProtectionMode=False, EnergySavingMode=False, Unused=True]]]";
+            Assert.That(stringValue, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ClimateControlScheduleOverrideValue_ToString()
+        {
+            var scheduleOverride = new ClimateControlScheduleOverrideValue
+            {
+                OverrideType = OverrideType.Permenant,
+                ScheduleState = ScheduleStateValue.Parse(10)
+            };
+
+            var stringValue = scheduleOverride.ToString();
+
+            var expectedMessage = "[ClimateControlScheduleOverrideValue: OverrideType=Permenant, ScheduleState=[ScheduleStateValue: Setback=10, FrostProtectionMode=False, EnergySavingMode=False, Unused=False]]";
+            Assert.That(stringValue, Is.EqualTo(expectedMessage));
         }
     }
 }
