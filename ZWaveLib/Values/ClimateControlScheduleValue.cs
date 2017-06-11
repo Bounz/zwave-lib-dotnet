@@ -44,8 +44,7 @@ namespace ZWaveLib
 
         public byte [] GetValueBytes ()
         {
-            var result = new List<byte> ();
-            result.Add ((byte)Weekday);
+            var result = new List<byte> {(byte) Weekday};
 
             for (int i = 0; i < NumSwitchpoints; i++) {
                 result.AddRange (Switchpoints[i].GetValueBytes ());
@@ -55,13 +54,10 @@ namespace ZWaveLib
         }
 
         public static ClimateControlScheduleValue Parse (byte [] bytes) {
-            var result = new ClimateControlScheduleValue ();
-
-            result.Weekday = (Weekday)bytes [2];
+            var result = new ClimateControlScheduleValue {Weekday = (Weekday) bytes[2]};
 
             for (int i = 0; i < NumSwitchpoints; i++) {
                 result.Switchpoints [i] = SwitchpointValue.Parse(bytes, i * 3 + 3);
-
             }
 
             return result;

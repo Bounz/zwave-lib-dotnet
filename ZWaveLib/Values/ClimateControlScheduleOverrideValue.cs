@@ -25,19 +25,17 @@ namespace ZWaveLib
 {
     public class ClimateControlScheduleOverrideValue
     {
-
         public OverrideType OverrideType { get; set; }
 
         public ScheduleStateValue ScheduleState { get; set; }
 
         public static ClimateControlScheduleOverrideValue Parse (byte [] bytes)
         {
-            var result = new ClimateControlScheduleOverrideValue ();
-
-            result.OverrideType = (OverrideType)bytes [2];
-            result.ScheduleState = ScheduleStateValue.Parse (bytes [3]);
-
-            return result;
+            return new ClimateControlScheduleOverrideValue
+            {
+                OverrideType = (OverrideType) bytes[2],
+                ScheduleState = ScheduleStateValue.Parse(bytes[3])
+            };
         }
 
         public byte [] GetValueBytes ()

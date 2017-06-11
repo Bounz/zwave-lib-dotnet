@@ -6,9 +6,9 @@ using ZWaveLib.Utilities;
 namespace ZWaveLib.CommandClasses.Irrigation
 {
     /// <summary>
-    /// SDS13740-1 Z-Wave Plus Device and Command Class Types and Defines Specification 2016-08-26
-    /// Sigma Designs Inc.Types and Defines Page 126 of 460
+    /// The Irrigation Command Class provides commands to manage irrigation systems.
     /// </summary>
+    /// <remarks>SDS13781-2 4.42 Irrigation Command Class, version 1</remarks>
     public class Irrigation : ICommandClass
     {
         public CommandClass GetClassId()
