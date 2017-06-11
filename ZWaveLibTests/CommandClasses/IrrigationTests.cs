@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
@@ -317,12 +318,14 @@ namespace ZWaveLibTests.CommandClasses
         }
 
         [Test]
-        public void ValveConfigSet_Returns_ValidMessage()
+        [TestCase(true, 1)]
+        [TestCase(false, 10)]
+        public void ValveConfigSet_Returns_ValidMessage(bool useMasterValve, byte expectedValveId)
         {
             var node = new Mock<IZWaveNode>();
             var config = new IrrigationValveConfig
             {
-                UseMasterValve = true,
+                UseMasterValve = useMasterValve,
                 ValveId = 10,
                 NominalCurrentHighThreshold = 230,
                 NominalCurrentLowThreshold = 100,
@@ -339,8 +342,8 @@ namespace ZWaveLibTests.CommandClasses
             {
                 CommandClassIrrigation,
                 IrrigationValveConfigSet,
-                0x01,
-                0x01,
+                Convert.ToByte(useMasterValve),
+                expectedValveId,
                 0xE6,
                 0x64,
                 0x21, 0x4F,

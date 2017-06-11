@@ -231,5 +231,18 @@ namespace ZWaveLib.Enums
             public const byte ValveTableRun = 0x11; // IRRIGATION_VALVE_TABLE_RUN
             public const byte SystemShutoff = 0x12; // IRRIGATION_SYSTEM_SHUTOFF
         }
+
+        internal class Schedule
+        {
+            // Climate Control Schedule command class commands
+            public const byte Set = 0x01;
+            public const byte Get = 0x02;
+            public const byte Report = 0x03;
+            public const byte ChangedGet = 0x04;
+            public const byte ChangedReport = 0x05;
+            public const byte OverrideSet = 0x06;
+            public const byte OverrideGet = 0x07;
+            public const byte OverrideReport = 0x08;
+        }
     }
 }
