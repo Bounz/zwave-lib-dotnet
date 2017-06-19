@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ZWaveLib.Values
+﻿namespace ZWaveLib.Values
 {
     public enum CentralScenePressType
     {
@@ -20,30 +14,23 @@ namespace ZWaveLib.Values
     
     public class CentralSceneValue
     {
-        // Layout
-        // 1 = MessageType
-        // 2 = Level- up from 0x75
-        // 3 = KeyAttribute
-        // 4 = Scene ID
-        public EventParameter EventType = EventParameter.CentralSceneNotification;
-        public byte SceneId; // byte 4
-        public byte Level; // byte 2 
-        public CentralScenePressType PressType; // byte 3
+        public byte SequenceNumber;
+        public CentralScenePressType PressType;
+        public byte SceneNumber;
 
         public static CentralSceneValue Parse(byte[] message)
         {
             return new CentralSceneValue()
             {
-                Level = message[2],
-                SceneId = message[4],
-                PressType = (CentralScenePressType) (message[3] & 0x07)
+                SequenceNumber = message[2],
+                PressType = (CentralScenePressType)(message[3] & 0x07),
+                SceneNumber = message[4]
             };
-
         }
 
         public override string ToString()
         {
-            return $"SceneId: {SceneId}, Level: {Level}, PressType: {PressType}";
+            return $"SceneId: {SceneNumber}, Level: {SequenceNumber}, PressType: {PressType}";
         }
     }
 }

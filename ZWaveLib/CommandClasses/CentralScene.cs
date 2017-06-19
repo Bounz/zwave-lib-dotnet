@@ -26,6 +26,11 @@ using ZWaveLib.Values;
 
 namespace ZWaveLib.CommandClasses
 {
+    /// <summary>
+    /// The Central Scene Command Class is used to communicate central scene activations to a central
+    /// controller using the lifeline concept.
+    /// </summary>
+    /// <remarks>SDS13781-2 4.16 Central Scene Command Class, version 2 [OBSOLETED]</remarks>
     public class CentralScene : ICommandClass
     {
         public CommandClass GetClassId()
@@ -58,11 +63,17 @@ namespace ZWaveLib.CommandClasses
             return nodeEvent;
         }
 
-        public static ZWaveMessage SupportedGet(ZWaveNode node)
+        /// <summary>
+        /// This command is used to request the maximum number of scenes that this device supports.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SDS13781-2 4.15.1 Central Scene Supported Get Command</remarks>
+        public static ZWaveMessage SupportedGet(IZWaveNode node)
         {
-            return node.SendDataRequest(new byte[] {
+            return node.SendDataRequest(new[] {
                 (byte)CommandClass.CentralScene,
-                (byte)Command.CentralScene.SupportedGet
+                Command.CentralScene.SupportedGet
             });
         }
     }
