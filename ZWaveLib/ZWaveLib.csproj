@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandClasses\CentralScene.cs" />
     <Compile Include="CommandClasses\DoorLock.cs" />
     <Compile Include="Utility\BitExtensions.cs" />
     <Compile Include="CommandClasses\Irrigation\Irrigation.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Utilities\SecurityData.cs" />
     <Compile Include="Utilities\SecutiryPayload.cs" />
     <Compile Include="Utilities\UnsupportedCommandException.cs" />
+    <Compile Include="Values\CentralSceneValue.cs" />
     <Compile Include="Values\SceneActivationValue.cs" />
     <Compile Include="Values\SetpointValue.cs" />
     <Compile Include="ZWaveMessage.cs" />

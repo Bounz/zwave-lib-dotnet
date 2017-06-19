@@ -234,7 +234,6 @@ namespace ZWaveLib.Enums
 
         internal class Schedule
         {
-            // Climate Control Schedule command class commands
             public const byte Set = 0x01;
             public const byte Get = 0x02;
             public const byte Report = 0x03;
@@ -243,6 +242,13 @@ namespace ZWaveLib.Enums
             public const byte OverrideSet = 0x06;
             public const byte OverrideGet = 0x07;
             public const byte OverrideReport = 0x08;
+        }
+
+        internal class CentralScene
+        {
+            public const byte SupportedGet = 0x01;
+            public const byte SupportedReport = 0x02;
+            public const byte Notification = 0x03;
         }
     }
 }

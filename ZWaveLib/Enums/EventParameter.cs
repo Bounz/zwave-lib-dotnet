@@ -80,9 +80,12 @@ namespace ZWaveLib
         RoutingInfo,
         Clock,
         SceneActivation,
+        CentralSceneNotification,
+        CentralSceneSupportedReport,
+
         IrrigationSystemInfoReport,
-        IrrigationSystemConfigReport,
         IrrigationSystemStatusReport,
+        IrrigationSystemConfigReport,
         IrrigationValveInfoReport,
         IrrigationValveConfigReport,
         IrrigationValveTableReport,
@@ -96,4 +99,3 @@ namespace ZWaveLib
     }
 
 }
-
