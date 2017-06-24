@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using ZWaveLib;
 using ZWaveLib.CommandClasses;
+using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 
 namespace ZWaveLibTests.CommandClasses
@@ -94,13 +95,24 @@ namespace ZWaveLibTests.CommandClasses
         }
 
         [Test]
-        public void GetMessage()
+        public void Get_Returns_ValidMessage()
         {
             var node = new Mock<IZWaveNode>();
 
             SensorMultilevel.Get(node.Object);
 
             var expectedMessage = new[] { CommandClassSensorMultilevel, SensorMultilevelGetV4 };
+            node.Verify(x => x.SendDataRequest(It.Is<byte[]>(bytes => bytes.SequenceEqual(expectedMessage))));
+        }
+
+        [Test]
+        public void GetV5_Returns_ValidMessage()
+        {
+            var node = new Mock<IZWaveNode>();
+
+            SensorMultilevel.Get(node.Object, ZWaveSensorType.Ultraviolet);
+
+            var expectedMessage = new byte[] { CommandClassSensorMultilevel, SensorMultilevelGetV4, 0x1B, 0x00 };
             node.Verify(x => x.SendDataRequest(It.Is<byte[]>(bytes => bytes.SequenceEqual(expectedMessage))));
         }
     }

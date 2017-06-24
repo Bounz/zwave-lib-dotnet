@@ -75,11 +75,22 @@ namespace ZWaveLib.CommandClasses
         /// <remarks>SDS13781 4.59.1 Multilevel Sensor Get Command</remarks>
         public static ZWaveMessage Get(IZWaveNode node)
         {
-            return node.SendDataRequest(new[] { 
-                (byte)CommandClass.SensorMultilevel, 
-                Command.SensorMultilevel.Get 
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SensorMultilevel,
+                Command.SensorMultilevel.Get
             });
         }
 
+        public static ZWaveMessage Get(IZWaveNode node, ZWaveSensorType sensorType, byte scale = 0x00)
+        {
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.SensorMultilevel,
+                Command.SensorMultilevel.Get,
+                (byte) sensorType,
+                (byte) (scale << 3)
+            });
+        }
     }
 }

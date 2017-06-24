@@ -51,8 +51,9 @@ namespace ZWaveLib.Values
         Distance = 20,
         AnglePosition = 21,
 
-        WaterFlow = 56, // 0x38
-        WaterPressure = 57 // 0x39
+        WaterFlow = 56,     // 0x38
+        WaterPressure = 57, // 0x39
+        Ultraviolet = 27    // 0x1B
     }
 
     public enum ZWaveTemperatureScaleType
@@ -71,12 +72,13 @@ namespace ZWaveLib.Values
         {
             var zvalue = ZWaveValue.ExtractValueFromBytes(message, 4);
             var sensorType = ZWaveSensorType.Unknown;
-            if (Enum.IsDefined(typeof(ZWaveSensorType), (int) message[2]))
-                sensorType = (ZWaveSensorType) message[2];
+            if (Enum.IsDefined(typeof(ZWaveSensorType), (int)message[2]))
+                sensorType = (ZWaveSensorType)message[2];
 
             var sensorValue = new SensorValue
             {
-                Parameter = sensorType
+                Parameter = sensorType,
+                Value = zvalue.Value
             };
 
             switch (sensorType)
@@ -90,17 +92,14 @@ namespace ZWaveLib.Values
                     break;
 
                 case ZWaveSensorType.GeneralPurpose:
-                    sensorValue.Value = zvalue.Value;
                     sensorValue.EventType = EventParameter.SensorGeneric;
                     break;
 
                 case ZWaveSensorType.Luminance:
-                    sensorValue.Value = zvalue.Value;
                     sensorValue.EventType = EventParameter.SensorLuminance;
                     break;
 
                 case ZWaveSensorType.Humidity:
-                    sensorValue.Value = zvalue.Value;
                     sensorValue.EventType = EventParameter.SensorHumidity;
                     break;
 
@@ -117,30 +116,26 @@ namespace ZWaveLib.Values
                     break;
 
                 case ZWaveSensorType.WaterFlow:
-                    sensorValue.Value = zvalue.Value;
                     sensorValue.EventType = EventParameter.WaterFlow;
                     break;
 
                 case ZWaveSensorType.WaterPressure:
-                    sensorValue.Value = zvalue.Value;
                     sensorValue.EventType = EventParameter.WaterPressure;
                     break;
 
-                // TODO: implement other Sensor Types
-
-                default:
-                    sensorValue.Value = zvalue.Value;
+                case ZWaveSensorType.Ultraviolet:
+                    sensorValue.EventType = EventParameter.Ultraviolet;
                     break;
+
+                // TODO: implement other Sensor Types
             }
 
-            return sensorValue;
-            
+            return sensorValue;       
         }
-
+        
         public static double FahrenheitToCelsius(double temperature)
         {
             return ((5.0 / 9.0) * (temperature - 32.0));
         }
     }
-
 }

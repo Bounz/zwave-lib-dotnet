@@ -27,7 +27,7 @@ using System.Reflection;
 
 namespace ZWaveLib.CommandClasses
 {
-    class CommandClassFactory
+    internal class CommandClassFactory
     {
         private static readonly object SyncLock = new object();
         private static Dictionary<byte, Type> _commandClasses;

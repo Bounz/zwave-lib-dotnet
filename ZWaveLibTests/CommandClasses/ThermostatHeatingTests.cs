@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using Moq;
-using NUnit.Framework;
-using ZWaveLib;
+﻿using NUnit.Framework;
 using ZWaveLib.CommandClasses;
-using ZWaveLib.Utilities;
 
 namespace ZWaveLibTests.CommandClasses
 {
