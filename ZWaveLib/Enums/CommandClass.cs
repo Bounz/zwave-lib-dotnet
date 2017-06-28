@@ -75,7 +75,10 @@ namespace ZWaveLib
         SensorAlarm = 0x9C,
         SilenceAlarm = 0x9D,
 
-        Irrigation = 0x6B
+        Irrigation = 0x6B,
+
+        // Z-Wave Network-Protocol Command Classes
+        CommandClassNetworkManagementInclusion = 0x34
     }
 
 }

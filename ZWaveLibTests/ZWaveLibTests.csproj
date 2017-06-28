@@ -68,6 +68,7 @@
     <Compile Include="CommandClasses\UserCodeTests.cs" />
     <Compile Include="CommandClasses\VersionTests.cs" />
     <Compile Include="CommandClasses\WakeUpTests.cs" />
+    <Compile Include="Controller\InclusionTests.cs" />
     <Compile Include="Values\SceneActivationValueTests.cs" />
     <Compile Include="Values\SensorValueTests.cs" />
     <Compile Include="Values\ZWaveValueTests.cs" />

@@ -20,6 +20,7 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using ZWaveLib.Attributes;
 using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 using ZWaveLib.Values;
@@ -82,6 +83,14 @@ namespace ZWaveLib.CommandClasses
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="sensorType"></param>
+        /// <param name="scale"></param>
+        /// <returns>SDS13781-2 4.57.6 Multilevel Sensor Get Command</returns>
+        [CommandClassVersion(5)]
         public static ZWaveMessage Get(IZWaveNode node, ZWaveSensorType sensorType, byte scale = 0x00)
         {
             return node.SendDataRequest(new[]

@@ -47,8 +47,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CommandClassVersionAttribute.cs" />
     <Compile Include="CommandClasses\CentralScene.cs" />
     <Compile Include="CommandClasses\DoorLock.cs" />
+    <Compile Include="CommandClasses\NetworkManagementInclusion.cs" />
     <Compile Include="Utility\BitExtensions.cs" />
     <Compile Include="CommandClasses\Irrigation\Irrigation.cs" />
     <Compile Include="CommandClasses\Irrigation\IrrigationSensorPolarityMask.cs" />

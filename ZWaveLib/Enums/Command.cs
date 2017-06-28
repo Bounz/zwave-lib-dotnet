@@ -20,6 +20,8 @@
  *     Project Homepage: https://github.com/genielabs/zwave-lib-dotnet
  */
 
+using System;
+
 namespace ZWaveLib.Enums
 {
     internal static class Command
@@ -92,6 +94,7 @@ namespace ZWaveLib.Enums
             public const byte Report = 0x05;
         }
 
+        [Obsolete("The Multi Instance command class was renamed to Multi Channel in version 3.")]
         internal class MultiInstance
         {
             public const byte Set = 0x01;
@@ -104,6 +107,19 @@ namespace ZWaveLib.Enums
         internal class MultiChannel
         {
             public const byte Encapsulated = 0x0D;
+
+            public const byte CapabilityGet = 0x09;
+            public const byte CapabilityReport = 0x0A;
+            public const byte CmdEncap = 0x0D;
+            public const byte EndPointFind = 0x0B;
+            public const byte EndPointFindReport = 0x0C;
+            public const byte EndPointGet = 0x07;
+            public const byte EndPointReport = 0x08;
+            public const byte MultiInstanceCmdEncap = 0x06;
+            public const byte MultiInstanceGet = 0x04;
+            public const byte MultiInstanceReport = 0x05;
+            public const byte AggregatedMembersGet = 0x0E;
+            public const byte AggregatedMembersReport = 0x0F;
         }
 
         internal class Association
@@ -249,6 +265,30 @@ namespace ZWaveLib.Enums
             public const byte SupportedGet = 0x01;
             public const byte SupportedReport = 0x02;
             public const byte Notification = 0x03;
+        }
+
+        internal class NetworkManagementInclusion
+        {
+            /* Network Management Inclusion command class commands */
+            public const byte NetworkManagementInclusionVersion = 0x02; // NETWORK_MANAGEMENT_INCLUSION_VERSION_V2
+            public const byte FailedNodeRemove = 0x07; // FAILED_NODE_REMOVE_V2
+            public const byte FailedNodeRemoveStatus = 0x08; // FAILED_NODE_REMOVE_STATUS_V2
+            public const byte NodeAdd = 0x01; // NODE_ADD_V2
+            public const byte NodeAddStatus = 0x02; // NODE_ADD_STATUS_V2
+            public const byte NodeRemove = 0x03; // NODE_REMOVE_V2
+            public const byte NodeRemoveStatus = 0x04; // NODE_REMOVE_STATUS_V2
+            public const byte FailedNodeReplace = 0x09; // FAILED_NODE_REPLACE_V2
+            public const byte FailedNodeReplaceStatus = 0x0A; // FAILED_NODE_REPLACE_STATUS_V2
+            public const byte NodeNeighborUpdateRequest = 0x0B; // NODE_NEIGHBOR_UPDATE_REQUEST_V2
+            public const byte NodeNeighborUpdateStatus = 0x0C; // NODE_NEIGHBOR_UPDATE_STATUS_V2
+            public const byte ReturnRouteAssign = 0x0D; // RETURN_ROUTE_ASSIGN_V2
+            public const byte ReturnRouteAssignComplete = 0x0E; // RETURN_ROUTE_ASSIGN_COMPLETE_V2
+            public const byte ReturnRouteDelete = 0x0F; // RETURN_ROUTE_DELETE_V2
+            public const byte ReturnRouteDeleteComplete = 0x10; // RETURN_ROUTE_DELETE_COMPLETE_V2
+            public const byte NodeAddKeysReport = 0x11; // NODE_ADD_KEYS_REPORT_V2
+            public const byte NodeAddKeysSet = 0x12; // NODE_ADD_KEYS_SET_V2
+            public const byte NodeAddDskReport = 0x13; // NODE_ADD_DSK_REPORT_V2
+            public const byte NodeAddDskSet = 0x14; // NODE_ADD_DSK_SET_V2
         }
     }
 }
