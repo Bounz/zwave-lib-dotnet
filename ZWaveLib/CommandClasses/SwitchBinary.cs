@@ -46,7 +46,7 @@ namespace ZWaveLib.CommandClasses
             switch (cmdType)
             {
                 case Command.SwitchBinary.Report:
-                case Command.SwitchBinary.Set: // some devices use this instead of report
+                case Command.SwitchBinary.Set: // some devices use this instead of report (RLY?)
                     var value = (double) message[2];
                     nodeEvent = new NodeEvent(node, EventParameter.SwitchBinary, value, 0);
                     break;
@@ -67,15 +67,20 @@ namespace ZWaveLib.CommandClasses
         /// <remarks>SDS12657 4.25.1 Binary Switch Set Command</remarks>
         public static ZWaveMessage Set(IZWaveNode node, int value)
         {
+            return node.SendDataRequest(Set(value));
+        }
+
+        internal static byte[] Set(int value)
+        {
             if (!IsValidBinarySetValue(value))
                 throw new ArgumentOutOfRangeException(nameof(value));
 
-            return node.SendDataRequest(new[]
+            return new[]
             {
                 (byte) CommandClass.SwitchBinary,
                 Command.SwitchBinary.Set,
                 byte.Parse(value.ToString())
-            });
+            };
         }
 
         /// <summary>
@@ -86,11 +91,16 @@ namespace ZWaveLib.CommandClasses
         /// <remarks>SDS12657 4.25.2 Binary Switch Get Command</remarks>
         public static ZWaveMessage Get(IZWaveNode node)
         {
-            return node.SendDataRequest(new[]
+            return node.SendDataRequest(Get());
+        }
+
+        internal static byte[] Get()
+        {
+            return new[]
             {
                 (byte) CommandClass.SwitchBinary,
                 Command.SwitchBinary.Get
-            });
+            };
         }
 
         private static bool IsValidBinarySetValue(int value)

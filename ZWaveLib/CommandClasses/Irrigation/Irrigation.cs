@@ -18,7 +18,7 @@ namespace ZWaveLib.CommandClasses.Irrigation
 
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            NodeEvent nodeEvent = null;
+            NodeEvent nodeEvent;
             var cmdType = message[1];
             switch (cmdType)
             {

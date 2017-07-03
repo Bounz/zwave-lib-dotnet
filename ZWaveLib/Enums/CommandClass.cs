@@ -53,7 +53,8 @@ namespace ZWaveLib
         //
         CentralScene = 0x5b,
         //
-        MultiInstance = 0x60,
+        MultiInstance = 0x60, // The Multi Instance command class was renamed to Multi Channel in version 3
+        MultiChannel = 0x60,
         DoorLock = 0x62,
         UserCode = 0x63,
         Configuration = 0x70,

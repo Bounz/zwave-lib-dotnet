@@ -21,29 +21,46 @@
  */
 
 using System;
-using System.Collections.Generic;
+using ZWaveLib.Attributes;
 using ZWaveLib.Enums;
 using ZWaveLib.Utilities;
 
-namespace ZWaveLib.CommandClasses
+namespace ZWaveLib.CommandClasses.MultiChannel
 {
-    [Obsolete("Use MultiChannel command class instead")]
-    public class MultiInstance : ICommandClass
+    /// <summary>
+    /// The Multi Channel command class is used to address one or more end points in a Multi Channel device.
+    /// </summary>
+    /// <remarks>SD13783-2 3.3 Multi Channel Command Class, version 4</remarks>
+    public class MultiChannel : ICommandClass
     {
         public CommandClass GetClassId()
         {
-            return CommandClass.MultiInstance;
+            return CommandClass.MultiChannel;
         }
 
         public NodeEvent GetEvent(IZWaveNode node, byte[] message)
         {
-            NodeEvent nodeEvent = null;
-
+            NodeEvent nodeEvent;
             var cmdType = message[1];
-            var instanceCmdClass = message[2];
-
             switch (cmdType)
             {
+                case Command.MultiChannel.EndPointReport:
+                    var endPointReport = MultiChannelEndPointReport.Parse(message);
+                    nodeEvent = new NodeEvent(node, EventParameter.MultiChannelEndPointReport, endPointReport, 0);
+                    break;
+
+                case Command.MultiChannel.CapabilityReport:
+                    var capabilityReport = MultiChannelCapabilityReport.Parse(message);
+                    nodeEvent = new NodeEvent(node, EventParameter.MultiChannelCapabilityReport, capabilityReport, 0);
+                    break;
+
+                case Command.MultiChannel.AggregatedMembersReport:
+                    var aggregatedMembersReport = MultiChannelAggregatedMembersReport.Parse(message);
+                    nodeEvent = new NodeEvent(node, EventParameter.MultiChannelAggregatedMembersReport, aggregatedMembersReport, 0);
+                    break;
+
+
+
                 case Command.MultiChannel.MultiInstanceCmdEncap:
                     nodeEvent = HandleMultiInstanceEncapReport(node, message);
                     break;
@@ -52,29 +69,103 @@ namespace ZWaveLib.CommandClasses
                     nodeEvent = HandleMultiChannelEncapReport(node, message);
                     break;
 
-                case Command.MultiChannel.MultiInstanceReport:
-                    var instanceCount = message[3];
-                    switch (instanceCmdClass)
-                    {
-                        case (byte) CommandClass.SwitchBinary:
-                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchBinaryCount, instanceCount, 0);
-                            break;
-                        case (byte) CommandClass.SwitchMultilevel:
-                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchMultilevelCount, instanceCount, 0);
-                            break;
-                        case (byte) CommandClass.SensorBinary:
-                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorBinaryCount, instanceCount, 0);
-                            break;
-                        case (byte) CommandClass.SensorMultilevel:
-                            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorMultilevelCount, instanceCount, 0);
-                            break;
-                    }
-                    break;
-
+                //case Command.MultiChannel.MultiInstanceReport:
+                //    var instanceCount = message[3];
+                //    switch (instanceCmdClass)
+                //    {
+                //        case (byte) CommandClass.SwitchBinary:
+                //            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchBinaryCount, instanceCount, 0);
+                //            break;
+                //        case (byte) CommandClass.SwitchMultilevel:
+                //            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSwitchMultilevelCount, instanceCount, 0);
+                //            break;
+                //        case (byte) CommandClass.SensorBinary:
+                //            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorBinaryCount, instanceCount, 0);
+                //            break;
+                //        case (byte) CommandClass.SensorMultilevel:
+                //            nodeEvent = new NodeEvent(node, EventParameter.MultiinstanceSensorMultilevelCount, instanceCount, 0);
+                //            break;
+                //    }
+                //    break;
+                default:
+                    throw new UnsupportedCommandException(cmdType);
             }
 
             return nodeEvent;
         }
+
+        /// <summary>
+        /// The Multi Channel End Point Get Command is used to query the number of Multi Channel End Points and other relevant Multi Channel attributes.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <remarks>SD13783-2 3.3.5 Multi Channel End Point Get Command</remarks>
+        public static ZWaveMessage EndPointGet(IZWaveNode node)
+        {
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.MultiChannel,
+                Command.MultiChannel.EndPointGet
+            });
+        }
+
+        /// <summary>
+        /// The Multi Channel Capability Get Command is used to query the capabilities of one individual End Point or Aggregated End Point.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="endPoint">This field MUST specify a valid End Point as advertised by the Multi Channel End Point Report.</param>
+        /// <returns>SD13783-2 3.3.7 Multi Channel Capability Get Command</returns>
+        public static ZWaveMessage CapabilityGet(IZWaveNode node, byte endPoint)
+        {
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.MultiChannel,
+                Command.MultiChannel.CapabilityGet,
+                endPoint
+            });
+        }
+
+        /// <summary>
+        /// The Multi Channel End Point Find Command is used to query individual End Points as well as Aggregated End Points for a specified set 
+        /// of generic and specific Device Class identifiers.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="genericDeviceClass">
+        /// This field MUST specify the generic Device Class which an End Point has to match.
+        /// The value 0xFF MAY be specified for the Generic Device Class field to indicate that all existing End Points are to be reported. If <c>0xFF</c> is specified, the Specific Device Class field MUST also be set to <c>0xFF</c>.
+        /// </param>
+        /// <param name="specificDeviceClass">This field MUST specify the specific Device Class which an End Point has to match.
+        /// The value 0xFF MAY be specified. If specified, a responding device MUST treat the value as a wild-card; advertising all End Points which match the advertised Generic Device Class, regardless of the Specific Device Class of the individual End Point. If specified, the value <c>0xFF</c> MUST also be advertised in the Multi Channel End Point Find Report Command.</param>
+        /// <returns>SD13783-2 3.3.9 Multi Channel End Point Find Command</returns>
+        public static ZWaveMessage EndPointFind(IZWaveNode node, byte genericDeviceClass, byte specificDeviceClass)
+        {
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.MultiChannel,
+                Command.MultiChannel.EndPointFind,
+                genericDeviceClass,
+                specificDeviceClass
+            });
+        }
+
+        /// <summary>
+        /// The Multi Channel Aggregated Members Get Command is used to query the members of an Aggregated End Point.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="aggregatedEndPoint"></param>
+        /// <returns>SD13783-2 3.3.11 Multi Channel Aggregated Members Get Command</returns>
+        [CommandClassVersion(4)]
+        public static ZWaveMessage AggregatedMembersGet(IZWaveNode node, byte aggregatedEndPoint)
+        {
+            return node.SendDataRequest(new[]
+            {
+                (byte) CommandClass.MultiChannel,
+                Command.MultiChannel.AggregatedMembersGet,
+                aggregatedEndPoint
+            });
+        }
+
+
 
         public static ZWaveMessage GetCount(ZWaveNode node, byte commandClass)
         {

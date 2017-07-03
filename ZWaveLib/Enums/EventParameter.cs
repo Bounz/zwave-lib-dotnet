@@ -97,7 +97,11 @@ namespace ZWaveLib
         ClimateControlScheduleChanged,
         ClimateControlScheduleOverride,
 
-        Ultraviolet
+        Ultraviolet,
+
+        MultiChannelEndPointReport,
+        MultiChannelCapabilityReport,
+        MultiChannelAggregatedMembersReport
     }
 
 }

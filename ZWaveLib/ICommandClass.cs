@@ -22,7 +22,7 @@
 
 namespace ZWaveLib
 {
-    internal interface ICommandClass
+    public interface ICommandClass
     {
         /// <summary>
         /// Returns Id of Command class

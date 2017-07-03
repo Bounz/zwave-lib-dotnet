@@ -106,6 +106,7 @@ namespace ZWaveLib.Enums
 
         internal class MultiChannel
         {
+            [Obsolete("Use CmdEncap enum member")]
             public const byte Encapsulated = 0x0D;
 
             public const byte CapabilityGet = 0x09;

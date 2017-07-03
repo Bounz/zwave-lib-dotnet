@@ -50,6 +50,12 @@
     <Compile Include="Attributes\CommandClassVersionAttribute.cs" />
     <Compile Include="CommandClasses\CentralScene.cs" />
     <Compile Include="CommandClasses\DoorLock.cs" />
+    <Compile Include="CommandClasses\MultiChannelExtensions.cs" />
+    <Compile Include="CommandClasses\MultiChannel\MultiChannelAggregatedMembersReport.cs" />
+    <Compile Include="CommandClasses\MultiChannel\MultiChannelCapabilityReport.cs" />
+    <Compile Include="CommandClasses\MultiChannel\MultiChannelEndPointFindReport.cs" />
+    <Compile Include="CommandClasses\MultiChannel\MultiChannelEndPointReport.cs" />
+    <Compile Include="CommandClasses\MultiChannel\MultiChannel.cs" />
     <Compile Include="CommandClasses\NetworkManagementInclusion.cs" />
     <Compile Include="Utility\BitExtensions.cs" />
     <Compile Include="CommandClasses\Irrigation\Irrigation.cs" />

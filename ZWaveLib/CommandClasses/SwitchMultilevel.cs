@@ -65,12 +65,17 @@ namespace ZWaveLib.CommandClasses
         /// <remarks>SDS12657 4.92.1 Multilevel Switch Set Command</remarks>
         public static ZWaveMessage Set(IZWaveNode node, int value)
         {
-            return node.SendDataRequest(new[]
+            return node.SendDataRequest(Set(value));
+        }
+
+        internal static byte[] Set(int value)
+        {
+            return new[]
             {
                 (byte) CommandClass.SwitchMultilevel,
                 Command.SwitchMultilevel.Set,
                 byte.Parse(value.ToString())
-            });
+            };
         }
 
         /// <summary>
@@ -81,11 +86,16 @@ namespace ZWaveLib.CommandClasses
         /// <remarks>SDS12657 4.92.2 Multilevel Switch Get Command</remarks>
         public static ZWaveMessage Get(IZWaveNode node)
         {
-            return node.SendDataRequest(new[]
+            return node.SendDataRequest(Get());
+        }
+
+        internal static byte[] Get()
+        {
+            return new[]
             {
                 (byte) CommandClass.SwitchMultilevel,
                 Command.SwitchMultilevel.Get
-            });
+            };
         }
 
         /// <summary>
