@@ -28,7 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Serialization;
 using Microsoft.Extensions.Logging;
-using SerialPortLib2;
+using SerialPortLibNetCore;
 using ZWaveLib2.CommandClasses;
 using ZWaveLib2.Enums;
 using ZWaveLib2.Utility;
@@ -1390,7 +1390,7 @@ namespace ZWaveLib2
             OnControllerStatusChanged(new ControllerStatusEventArgs(status));
         }
 
-        private void SerialPort_MessageReceived(object sender, SerialPortLib2.MessageReceivedEventArgs args)
+        private void SerialPort_MessageReceived(object sender, SerialPortLibNetCore.MessageReceivedEventArgs args)
         {
             lock (readLock)
             {
