@@ -7,7 +7,7 @@ before_build:
 
 build:
   project: .\ZWaveLib.sln
-  verbosity: minimal
+  verbosity: normal
 
 test:
   assemblies:
