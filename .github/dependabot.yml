@@ -1,0 +1,20 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "02:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: NLog
+    versions:
+    - "> 4.5.10"
+  - dependency-name: SerialPortStream
+    versions:
+    - 2.2.2
+    - 2.3.0
+  - dependency-name: NUnit
+    versions:
+    - 3.13.0
+    - 3.13.1
